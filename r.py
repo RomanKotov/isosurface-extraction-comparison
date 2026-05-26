@@ -4,6 +4,7 @@ import json
 from typing import Tuple, Self, TypedDict
 
 type Array1D = np.ndarray[Tuple[int], np.float64]
+type Array3D = np.ndarray[Tuple[int, int, int], np.float64]
 type Point3D = Tuple[float, float, float]
 
 
