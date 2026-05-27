@@ -73,15 +73,12 @@ class MarchingCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
             "resolution": options.get("resolution", 5),
-            "x_range": options.get("x_range", (-1, 1)),
-            "y_range": options.get("y_range", (-1, 1)),
-            "z_range": options.get("z_range", (-1, 1)),
         }
 
     def _do_fit(self, r_function: AbstractRF):
-        xmin, xmax = self.settings["x_range"]
-        ymin, ymax = self.settings["y_range"]
-        zmin, zmax = self.settings["z_range"]
+        xmin, xmax = -.5, .5
+        ymin, ymax = -.5, .5
+        zmin, zmax = -.5, .5
         resolution = self.settings["resolution"]
         x = np.linspace(xmin, xmax, resolution)
         y = np.linspace(ymin, ymax, resolution)
@@ -98,9 +95,6 @@ class FlexiCubes(AbstractAlgorithm):
         return {
             "resolution": options.get("resolution", 5),
             "iterations": options.get("iterations", 200),
-            "x_range": options.get("x_range", (-1, 1)),
-            "y_range": options.get("y_range", (-1, 1)),
-            "z_range": options.get("z_range", (-1, 1)),
             "device": options.get("device", "cpu"),
             "learning_rate": options.get("learning_rate", 0.01),
         }
@@ -110,18 +104,22 @@ class FlexiCubes(AbstractAlgorithm):
         resolution = self.settings["resolution"]
         learning_rate = self.settings["learning_rate"]
         iterations = self.settings["iterations"]
+
         fc = FC(device)
         x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+
         sdf = torch.rand_like(x_nx3[:, 0]) - 0.1
         sdf = torch.nn.Parameter(sdf.clone().detach(), requires_grad=True)
+
         weight = torch.zeros(
-            (cube_fx8.shape[0], 21), dtype=torch.float, device=device)
+            (cube_fx8.shape[0], 21), dtype=torch.float, device=device
+        )
         weight = torch.nn.Parameter(
-            weight.clone().detach(), requires_grad=True)
-        all_edges = cube_fx8[:, fc.cube_edges].reshape(-1, 2)
-        grid_edges = torch.unique(all_edges, dim=0)
+            weight.clone().detach(), requires_grad=True
+        )
         deform = torch.nn.Parameter(
-            torch.zeros_like(x_nx3), requires_grad=True)
+            torch.zeros_like(x_nx3), requires_grad=True
+        )
         grid_verts = x_nx3 + (2-1e-8) / (resolution * 2) * torch.tanh(deform)
 
         vertices, faces, L_dev = fc(
@@ -154,7 +152,7 @@ class FlexiCubes(AbstractAlgorithm):
         )
 
         def res(xyz):
-            x, y, z = grid_verts.split(1, dim=1)
+            x, y, z = xyz.split(1, dim=1)
             return r_function.compute(x, y, z)
 
         def sdf_diff(sdf, verts):
