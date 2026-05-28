@@ -49,7 +49,8 @@ class AbstractAlgorithm(ABC):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
         start = time.perf_counter()
-        self._mesh = self._do_fit(r_function)
+        mesh = self._do_fit(r_function)
+        self._add_history_item(HistoryItem("Result", mesh))
         end = time.perf_counter()
         self._meta.elapsed_time_seconds = end - start
 
@@ -63,7 +64,7 @@ class AbstractAlgorithm(ABC):
 
     @property
     def mesh(self):
-        return self._mesh
+        return self._history[-1].mesh
 
     def _add_history_item(self, item: HistoryItem):
         self._history.append(item)
@@ -73,6 +74,7 @@ class MarchingCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
             "resolution": options.get("resolution", 5),
+            "method": options.get("method", "lewiner"),
         }
 
     def _do_fit(self, r_function: AbstractRF):
@@ -86,7 +88,9 @@ class MarchingCubes(AbstractAlgorithm):
         X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
 
         volume = r_function.compute(X, Y, Z)
-        verts, faces, normals, values = marching_cubes(volume, level=0.0)
+        verts, faces, normals, values = marching_cubes(
+            volume, level=0.0, method=self.settings["method"]
+        )
         return Mesh(vertices=verts, faces=faces)
 
 
@@ -96,10 +100,37 @@ class FlexiCubes(AbstractAlgorithm):
             "resolution": options.get("resolution", 5),
             "iterations": options.get("iterations", 200),
             "device": options.get("device", "cpu"),
-            "learning_rate": options.get("learning_rate", 0.01),
+            "learning_rate": options.get("learning_rate", 0.05),
         }
 
     def _do_fit(self, r_function: AbstractRF):
+        if self.settings["iterations"] <= 1:
+            return self.fit_single(r_function)
+        else:
+            return self.fit_gradient(r_function)
+
+    def fit_single(self, r_function: AbstractRF):
+        device = self.settings["device"]
+        resolution = self.settings["resolution"]
+
+        fc = FC(device)
+        x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+
+        x, y, z = x_nx3.split(1, dim=1)
+        sdf = r_function.compute(x, y, z)
+
+        vertices, faces, L_dev = fc(
+            x_nx3,
+            sdf,
+            cube_fx8,
+            resolution
+        )
+        return Mesh(
+            vertices=vertices.detach().cpu().numpy(),
+            faces=faces.detach().cpu().numpy()
+        )
+
+    def fit_gradient(self, r_function: AbstractRF):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
         learning_rate = self.settings["learning_rate"]
@@ -200,4 +231,18 @@ class FlexiCubes(AbstractAlgorithm):
                             )
                         )
                     )
-        return self.history[-1].mesh
+        with torch.no_grad():
+            v, f, L_dev = fc(
+                grid_verts,
+                sdf,
+                cube_fx8,
+                resolution,
+                beta_fx12=weight[:, :12],
+                alpha_fx8=weight[:, 12:20],
+                gamma_f=weight[:, 20],
+                training=False
+            )
+            return Mesh(
+                vertices=v.detach().cpu().numpy(),
+                faces=f.detach().cpu().numpy()
+            )
