@@ -2,6 +2,7 @@ import gc
 import time
 import torch
 import tracemalloc
+import trimesh
 import tqdm
 
 import numpy as np
@@ -12,6 +13,9 @@ from skimage.measure import marching_cubes
 
 from r import AbstractRF, Array3D
 from flexicubes import FlexiCubes as FC
+
+
+NUMBER_OF_TEST_SAMPLES = 5000
 
 
 @dataclass
@@ -29,8 +33,12 @@ class HistoryItem:
 @dataclass
 class FitMeta:
     elapsed_time_seconds: float = field(default=0)
+    mean_error: float = field(default=0)
+    max_error: float = field(default=0)
+    rmse_error: float = field(default=0)
     elapsed_memory: int = field(default=0)
     triangle_count: int = field(default=0)
+    watertight: bool = field(default=False)
 
 
 class AbstractAlgorithm(ABC):
@@ -68,6 +76,7 @@ class AbstractAlgorithm(ABC):
 
         self._meta.triangle_count = len(mesh.faces)
         self._add_history_item(HistoryItem("Result", mesh))
+        self._calculate_deviation(mesh, r_function)
 
     @property
     def meta(self):
@@ -80,6 +89,19 @@ class AbstractAlgorithm(ABC):
     @property
     def mesh(self):
         return self._history[-1].mesh
+
+    def _calculate_deviation(self, mesh: Mesh, r_function: AbstractRF):
+        test_mesh = trimesh.Trimesh(vertices=mesh.vertices, faces=mesh.faces)
+        self._meta.watertight = test_mesh.is_watertight
+        points, face_index = trimesh.sample.sample_surface(
+            test_mesh, NUMBER_OF_TEST_SAMPLES
+        )
+        sdf_values = r_function.compute(
+            points[:, 0], points[:, 1], points[:, 2]
+        )
+        self._meta.mean_error = np.mean(np.abs(sdf_values))
+        self._meta.max_error = np.max(np.abs(sdf_values))
+        self._meta.rmse_error = np.sqrt(np.mean(sdf_values**2))
 
     def _add_history_item(self, item: HistoryItem):
         self._history.append(item)
