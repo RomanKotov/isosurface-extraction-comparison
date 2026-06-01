@@ -1,5 +1,7 @@
+import gc
 import time
 import torch
+import tracemalloc
 import tqdm
 
 import numpy as np
@@ -27,6 +29,8 @@ class HistoryItem:
 @dataclass
 class FitMeta:
     elapsed_time_seconds: float = field(default=0)
+    elapsed_memory: int = field(default=0)
+    triangle_count: int = field(default=0)
 
 
 class AbstractAlgorithm(ABC):
@@ -48,11 +52,22 @@ class AbstractAlgorithm(ABC):
     def fit(self, r_function: AbstractRF):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
+        gc.disable()
+        tracemalloc.start()
+        memory_start, peak_start = tracemalloc.get_traced_memory()
         start = time.perf_counter()
-        mesh = self._do_fit(r_function)
+        try:
+            mesh = self._do_fit(r_function)
+        finally:
+            memory_end, peak_end = tracemalloc.get_traced_memory()
+            end = time.perf_counter()
+            self._meta.elapsed_time_seconds = end - start
+            self._meta.elapsed_memory = memory_end - memory_start
+            tracemalloc.stop()
+            gc.enable()
+
+        self._meta.triangle_count = len(mesh.faces)
         self._add_history_item(HistoryItem("Result", mesh))
-        end = time.perf_counter()
-        self._meta.elapsed_time_seconds = end - start
 
     @property
     def meta(self):
