@@ -83,6 +83,7 @@ nvidia-nvjitlink==13.0.88 ; platform_system == "Linux" and (sys_platform == "lin
 nvidia-nvshmem-cu13==3.4.5 ; python_version == "3.14" and platform_system == "Linux"
 nvidia-nvtx==13.0.85 ; platform_system == "Linux" and (sys_platform == "linux" or sys_platform == "win32") and python_version == "3.14"
 packaging==26.2 ; python_version == "3.14"
+pandas==3.0.3 ; python_version == "3.14"
 pandocfilters==1.5.1 ; python_version == "3.14"
 parso==0.8.7 ; python_version == "3.14"
 pexpect==4.9.0 ; python_version == "3.14" and sys_platform != "win32" and sys_platform != "emscripten"
