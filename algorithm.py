@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from skimage.measure import marching_cubes
 
-from r import AbstractRF, Array3D
+from r import AbstractRF
 from flexicubes import FlexiCubes as FC
 
 
@@ -19,15 +19,9 @@ NUMBER_OF_TEST_SAMPLES = 5000
 
 
 @dataclass
-class Mesh:
-    vertices: Array3D
-    faces: Array3D
-
-
-@dataclass
 class HistoryItem:
     title: str
-    mesh: Mesh
+    mesh: trimesh.Trimesh
 
 
 @dataclass
@@ -54,7 +48,7 @@ class AbstractAlgorithm(ABC):
         raise NotImplementedError("Unable to parse options")
 
     @abstractmethod
-    def _do_fit(self, r_function) -> Mesh:
+    def _do_fit(self, r_function) -> trimesh.Trimesh:
         raise NotImplementedError("Unable to fit this algorithm")
 
     def fit(self, r_function: AbstractRF):
@@ -90,11 +84,10 @@ class AbstractAlgorithm(ABC):
     def mesh(self):
         return self._history[-1].mesh
 
-    def _calculate_deviation(self, mesh: Mesh, r_function: AbstractRF):
-        test_mesh = trimesh.Trimesh(vertices=mesh.vertices, faces=mesh.faces)
-        self._meta.watertight = test_mesh.is_watertight
+    def _calculate_deviation(self, mesh: trimesh.Trimesh, r_function: AbstractRF):
+        self._meta.watertight = mesh.is_watertight
         points, face_index = trimesh.sample.sample_surface(
-            test_mesh, NUMBER_OF_TEST_SAMPLES
+            mesh, NUMBER_OF_TEST_SAMPLES
         )
         sdf_values = r_function.compute(
             points[:, 0], points[:, 1], points[:, 2]
@@ -128,7 +121,7 @@ class MarchingCubes(AbstractAlgorithm):
         verts, faces, normals, values = marching_cubes(
             volume, level=0.0, method=self.settings["method"]
         )
-        return Mesh(vertices=verts, faces=faces)
+        return trimesh.Trimesh(vertices=verts, faces=faces)
 
 
 class FlexiCubes(AbstractAlgorithm):
@@ -162,7 +155,7 @@ class FlexiCubes(AbstractAlgorithm):
             cube_fx8,
             resolution
         )
-        return Mesh(
+        return trimesh.Trimesh(
             vertices=vertices.detach().cpu().numpy(),
             faces=faces.detach().cpu().numpy()
         )
@@ -203,7 +196,7 @@ class FlexiCubes(AbstractAlgorithm):
 
         self._add_history_item(HistoryItem(
             title="Initial Mesh",
-            mesh=Mesh(
+            mesh=trimesh.Trimesh(
                 vertices=vertices.detach().cpu().numpy(),
                 faces=faces.detach().cpu().numpy()
             )
@@ -262,7 +255,7 @@ class FlexiCubes(AbstractAlgorithm):
                     self._add_history_item(
                         HistoryItem(
                             title=f"Iteration {it+1}",
-                            mesh=Mesh(
+                            mesh=trimesh.Trimesh(
                                 vertices=v.detach().cpu().numpy(),
                                 faces=f.detach().cpu().numpy()
                             )
@@ -279,7 +272,7 @@ class FlexiCubes(AbstractAlgorithm):
                 gamma_f=weight[:, 20],
                 training=False
             )
-            return Mesh(
+            return trimesh.Trimesh(
                 vertices=v.detach().cpu().numpy(),
                 faces=f.detach().cpu().numpy()
             )

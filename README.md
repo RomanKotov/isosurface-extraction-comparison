@@ -2,7 +2,7 @@
 
 ## Installation steps
 - Install python
-- Install dependencies `pip install -r requirements.txt`
+- Install dependencies `pip install -r requirements.txt` and `jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplotlib`
 - Launch jupyter-lab `jupyter lab` and open `main.ipynb` file there
 
 ## Useful commands

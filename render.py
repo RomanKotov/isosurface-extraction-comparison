@@ -1,13 +1,15 @@
 import pandas as pd
+import trimesh
 
 from dataclasses import fields
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-from algorithm import Mesh, AbstractAlgorithm, FitMeta
+from algorithm import AbstractAlgorithm, FitMeta
+from r import AbstractRF
 
 
-def render_static(mesh: Mesh):
+def render_static(mesh: trimesh.Trimesh):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
 
