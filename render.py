@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import trimesh
 
 from dataclasses import fields
@@ -8,6 +9,8 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from algorithm import AbstractAlgorithm, FitMeta
 from r import AbstractRF
 
+COLORMAP = plt.colormaps['bwr']
+
 
 def render_static(mesh: trimesh.Trimesh):
     fig = plt.figure(figsize=(10, 10))
@@ -15,6 +18,32 @@ def render_static(mesh: trimesh.Trimesh):
 
     m = Poly3DCollection(mesh.vertices[mesh.faces])
     m.set_edgecolor('k')
+    ax.add_collection3d(m)
+    plt.tight_layout()
+    plt.show()
+
+
+def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    data = mesh.vertices[mesh.faces]
+    n_faces, n_items, n_cols = data.shape
+    reshaped = data.reshape((n_faces*n_items, n_cols))
+    diff = r_function.compute(
+        reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
+    ).reshape((n_faces, n_items))
+    diff = np.mean(diff, axis=1)
+    diff_min = np.min(diff)
+    diff_max = np.max(diff)
+    normalized_diff = (diff - diff_min) / (diff_max - diff_min)
+
+    colors = COLORMAP(normalized_diff)
+
+    m = Poly3DCollection(data)
+    m.set_edgecolor('black')
+    m.set_facecolor(colors)
+
     ax.add_collection3d(m)
     plt.tight_layout()
     plt.show()
