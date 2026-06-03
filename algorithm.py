@@ -84,7 +84,9 @@ class AbstractAlgorithm(ABC):
     def mesh(self):
         return self._history[-1].mesh
 
-    def _calculate_deviation(self, mesh: trimesh.Trimesh, r_function: AbstractRF):
+    def _calculate_deviation(
+            self, mesh: trimesh.Trimesh, r_function: AbstractRF
+    ):
         self._meta.watertight = mesh.is_watertight
         points, face_index = trimesh.sample.sample_surface(
             mesh, NUMBER_OF_TEST_SAMPLES
@@ -117,10 +119,17 @@ class MarchingCubes(AbstractAlgorithm):
         z = np.linspace(zmin, zmax, resolution)
         X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
 
+        spacing_factor = resolution - 1
+        dx = (xmax - xmin) / spacing_factor
+        dy = (ymax - ymin) / spacing_factor
+        dz = (zmax - zmin) / spacing_factor
+
         volume = r_function.compute(X, Y, Z)
         verts, faces, normals, values = marching_cubes(
-            volume, level=0.0, method=self.settings["method"]
+            volume, level=0.0, method=self.settings["method"],
+            spacing=(dx, dy, dz)
         )
+        verts += np.array([xmin, ymin, zmin])
         return trimesh.Trimesh(vertices=verts, faces=faces)
 
 
