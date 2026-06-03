@@ -29,11 +29,10 @@ def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
 
     data = mesh.vertices[mesh.faces]
     n_faces, n_items, n_cols = data.shape
-    reshaped = data.reshape((n_faces*n_items, n_cols))
+    reshaped = np.array(mesh.triangles_center)
     diff = r_function.compute(
         reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
-    ).reshape((n_faces, n_items))
-    diff = np.mean(diff, axis=1)
+    )
     diff_min = np.min(diff)
     diff_max = np.max(diff)
     normalized_diff = (diff - diff_min) / (diff_max - diff_min)
