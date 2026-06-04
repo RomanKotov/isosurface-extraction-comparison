@@ -152,6 +152,7 @@ class FlexiCubes(AbstractAlgorithm):
             "device": options.get("device", "cpu"),
             "method": options.get("method", "default"),
             "learning_rate": options.get("learning_rate", 0.05),
+            "gradient_step": options.get("gradient_step", 1e-6),
         }
 
     def _do_fit(self, r_function: AbstractRF):
@@ -160,6 +161,8 @@ class FlexiCubes(AbstractAlgorithm):
                 return self.fit_default(r_function)
             case "learn":
                 return self.fit_learn(r_function)
+            case "gradient":
+                return self.fit_gradient(r_function)
             case method:
                 raise ValueError(f"Unknown learning method {method}")
 
@@ -178,6 +181,35 @@ class FlexiCubes(AbstractAlgorithm):
             sdf,
             cube_fx8,
             resolution
+        )
+        return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
+
+    def fit_gradient(self, r: AbstractRF):
+        device = self.settings["device"]
+        resolution = self.settings["resolution"]
+
+        fc = FC(device)
+        x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+
+        x, y, z = x_nx3.split(1, dim=1)
+        sdf = r.compute(x, y, z)
+
+        def grad_f(x3):
+            h = self.settings["gradient_step"]
+            x, y, z = x3.split(1, dim=1)
+            dh = 2 * h
+            df_dx = (r.compute(x + h, y, z) - r.compute(x - h, y, z)) / dh
+            df_dy = (r.compute(x, y + h, z) - r.compute(x, y - h, z)) / dh
+            df_dz = (r.compute(x, y, z + h) - r.compute(x, y, z - h)) / dh
+            result = torch.stack([df_dx, df_dy, df_dz], axis=1)
+            return result
+
+        vertices, faces, L_dev = fc(
+            x_nx3,
+            sdf,
+            cube_fx8,
+            resolution,
+            grad_func=grad_f
         )
         return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
