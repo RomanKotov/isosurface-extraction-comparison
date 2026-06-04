@@ -4,12 +4,14 @@ import trimesh
 
 from dataclasses import fields
 from matplotlib import pyplot as plt
+from matplotlib import cm
+from matplotlib.colors import Normalize
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 from algorithm import AbstractAlgorithm, FitMeta
 from r import AbstractRF
 
-COLORMAP = plt.colormaps['bwr']
+COLORMAP = plt.colormaps['Spectral']
 
 
 def render_static(mesh: trimesh.Trimesh):
@@ -33,17 +35,22 @@ def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
     diff = r_function.compute(
         reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
     )
-    diff_min = np.min(diff)
-    diff_max = np.max(diff)
-    normalized_diff = (diff - diff_min) / (diff_max - diff_min)
-
-    colors = COLORMAP(normalized_diff)
+    diff_max = np.max(np.abs(diff))
+    diff_min = - diff_max
+    norm = Normalize(vmin=diff_min, vmax=diff_max)
+    colors = COLORMAP(norm(diff))
 
     m = Poly3DCollection(data)
     m.set_edgecolor('black')
     m.set_facecolor(colors)
-
     ax.add_collection3d(m)
+    ax.set_box_aspect([1, 1, 1])
+
+    sm = cm.ScalarMappable(norm=norm, cmap=COLORMAP)
+    sm.set_array([])
+    fig.subplots_adjust(right=0.95)
+    fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04, label="Difference")
+
     plt.tight_layout()
     plt.show()
 
