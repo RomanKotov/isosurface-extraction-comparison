@@ -11,11 +11,15 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from skimage.measure import marching_cubes
 
-from r import AbstractRF
+from r import AbstractRF, Array3D
 from flexicubes import FlexiCubes as FC
 
 
 NUMBER_OF_TEST_SAMPLES = 5000
+
+type DimensionRange = tuple[float, float]
+type ResultDimensions = tuple[DimensionRange, DimensionRange, DimensionRange]
+type IntermediateMeshResult = tuple[Array3D, Array3D]
 
 
 @dataclass
@@ -48,18 +52,19 @@ class AbstractAlgorithm(ABC):
         raise NotImplementedError("Unable to parse options")
 
     @abstractmethod
-    def _do_fit(self, r_function) -> trimesh.Trimesh:
+    def _do_fit(self, r_function) -> IntermediateMeshResult:
         raise NotImplementedError("Unable to fit this algorithm")
 
-    def fit(self, r_function: AbstractRF):
+    def fit(self, r_function: AbstractRF, dimensions: ResultDimensions):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
+        self._result_dimensions = dimensions
         gc.disable()
         tracemalloc.start()
         memory_start, peak_start = tracemalloc.get_traced_memory()
         start = time.perf_counter()
         try:
-            mesh = self._do_fit(r_function)
+            vertices, faces = self._do_fit(r_function)
         finally:
             memory_end, peak_end = tracemalloc.get_traced_memory()
             end = time.perf_counter()
@@ -68,9 +73,9 @@ class AbstractAlgorithm(ABC):
             tracemalloc.stop()
             gc.enable()
 
-        self._meta.triangle_count = len(mesh.faces)
-        self._add_history_item(HistoryItem("Result", mesh))
-        self._calculate_deviation(mesh, r_function)
+        self._meta.triangle_count = len(faces)
+        self._add_history_item("Result", vertices, faces)
+        self._calculate_deviation(r_function)
 
     @property
     def meta(self):
@@ -84,10 +89,19 @@ class AbstractAlgorithm(ABC):
     def mesh(self):
         return self._history[-1].mesh
 
-    def _calculate_deviation(
-            self, mesh: trimesh.Trimesh, r_function: AbstractRF
-    ):
+    def _scale_mesh(self, mesh: trimesh.Trimesh):
+        dimensions = np.array(self._result_dimensions)
+        v = mesh.vertices
+        scaled_vertices = (v - v.min()) / (v.max() - v.min())
+        scaled_vertices = (
+            scaled_vertices * (dimensions[:, 1] - dimensions[:, 0]).T
+        ) - abs(dimensions[:, 0])
+        return trimesh.Trimesh(vertices=scaled_vertices, faces=mesh.faces)
+
+    def _calculate_deviation(self, r_function: AbstractRF):
+        mesh = self.mesh
         self._meta.watertight = mesh.is_watertight
+        mesh = self._scale_mesh(mesh)
         points, face_index = trimesh.sample.sample_surface(
             mesh, NUMBER_OF_TEST_SAMPLES
         )
@@ -97,9 +111,11 @@ class AbstractAlgorithm(ABC):
         self._meta.mean_error = np.mean(np.abs(sdf_values))
         self._meta.max_error = np.max(np.abs(sdf_values))
         self._meta.rmse_error = np.sqrt(np.mean(sdf_values**2))
+        self._add_history_item("Scaled result", mesh.vertices, mesh.faces)
 
-    def _add_history_item(self, item: HistoryItem):
-        self._history.append(item)
+    def _add_history_item(self, title: str, vertices: Array3D, faces: Array3D):
+        mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+        self._history.append(HistoryItem(title=title, mesh=mesh))
 
 
 class MarchingCubes(AbstractAlgorithm):
@@ -110,6 +126,13 @@ class MarchingCubes(AbstractAlgorithm):
         }
 
     def _do_fit(self, r_function: AbstractRF):
+        volume = self._get_volume(r_function)
+        verts, faces, normals, values = marching_cubes(
+            volume, level=0.0, method=self.settings["method"]
+        )
+        return verts, faces
+
+    def _get_volume(self, r_function: AbstractRF):
         xmin, xmax = -.5, .5
         ymin, ymax = -.5, .5
         zmin, zmax = -.5, .5
@@ -118,37 +141,29 @@ class MarchingCubes(AbstractAlgorithm):
         y = np.linspace(ymin, ymax, resolution)
         z = np.linspace(zmin, zmax, resolution)
         X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
-
-        spacing_factor = resolution - 1
-        dx = (xmax - xmin) / spacing_factor
-        dy = (ymax - ymin) / spacing_factor
-        dz = (zmax - zmin) / spacing_factor
-
-        volume = r_function.compute(X, Y, Z)
-        verts, faces, normals, values = marching_cubes(
-            volume, level=0.0, method=self.settings["method"],
-            spacing=(dx, dy, dz)
-        )
-        verts += np.array([xmin, ymin, zmin])
-        return trimesh.Trimesh(vertices=verts, faces=faces)
+        return r_function.compute(X, Y, Z)
 
 
 class FlexiCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
             "resolution": options.get("resolution", 5),
-            "iterations": options.get("iterations", 200),
+            "iterations": options.get("iterations", 400),
             "device": options.get("device", "cpu"),
+            "method": options.get("method", "default"),
             "learning_rate": options.get("learning_rate", 0.05),
         }
 
     def _do_fit(self, r_function: AbstractRF):
-        if self.settings["iterations"] <= 1:
-            return self.fit_single(r_function)
-        else:
-            return self.fit_gradient(r_function)
+        match self.settings["method"]:
+            case "default":
+                return self.fit_default(r_function)
+            case "learn":
+                return self.fit_learn(r_function)
+            case method:
+                raise ValueError(f"Unknown learning method {method}")
 
-    def fit_single(self, r_function: AbstractRF):
+    def fit_default(self, r_function: AbstractRF):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
 
@@ -164,12 +179,9 @@ class FlexiCubes(AbstractAlgorithm):
             cube_fx8,
             resolution
         )
-        return trimesh.Trimesh(
-            vertices=vertices.detach().cpu().numpy(),
-            faces=faces.detach().cpu().numpy()
-        )
+        return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
-    def fit_gradient(self, r_function: AbstractRF):
+    def fit_learn(self, r_function: AbstractRF):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
         learning_rate = self.settings["learning_rate"]
@@ -203,13 +215,11 @@ class FlexiCubes(AbstractAlgorithm):
             training=False
         )
 
-        self._add_history_item(HistoryItem(
+        self._add_history_item(
             title="Initial Mesh",
-            mesh=trimesh.Trimesh(
-                vertices=vertices.detach().cpu().numpy(),
-                faces=faces.detach().cpu().numpy()
-            )
-        ))
+            vertices=vertices.detach().cpu().numpy(),
+            faces=faces.detach().cpu().numpy()
+        )
 
         def lr_schedule(iteration):
             return max(0.0, 10 ** (-(iteration) * 0.0002))
@@ -262,13 +272,9 @@ class FlexiCubes(AbstractAlgorithm):
                         training=False
                     )
                     self._add_history_item(
-                        HistoryItem(
-                            title=f"Iteration {it+1}",
-                            mesh=trimesh.Trimesh(
-                                vertices=v.detach().cpu().numpy(),
-                                faces=f.detach().cpu().numpy()
-                            )
-                        )
+                        title=f"Iteration {it+1}",
+                        vertices=v.detach().cpu().numpy(),
+                        faces=f.detach().cpu().numpy()
                     )
         with torch.no_grad():
             v, f, L_dev = fc(
@@ -281,7 +287,4 @@ class FlexiCubes(AbstractAlgorithm):
                 gamma_f=weight[:, 20],
                 training=False
             )
-            return trimesh.Trimesh(
-                vertices=v.detach().cpu().numpy(),
-                faces=f.detach().cpu().numpy()
-            )
+            return v.detach().cpu().numpy(), f.detach().cpu().numpy()
