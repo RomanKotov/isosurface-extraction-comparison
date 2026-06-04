@@ -31,15 +31,42 @@ class HistoryItem:
 
 @dataclass
 class FitMeta:
-    elapsed_time_seconds: float = field(default=0)
-    mean_error: float = field(default=0)
-    max_error: float = field(default=0)
-    rmse_error: float = field(default=0)
-    elapsed_memory: int = field(default=0)
-    triangle_count: int = field(default=0)
-    degenerate_faces: int = field(default=0)
-    consistent_winding: bool = field(default=False)
-    watertight: bool = field(default=False)
+    elapsed_time_seconds: float = field(
+        default=0,
+        metadata={"title": "Computation time, seconds"}
+    )
+    mean_error: float = field(
+        default=0,
+        metadata={"title": "Mean Error"}
+    )
+    max_error: float = field(
+        default=0,
+        metadata={"title": "Max Error"}
+    )
+    rmse_error: float = field(
+        default=0,
+        metadata={"title": "RMSE Error"}
+    )
+    elapsed_memory: int = field(
+        default=0,
+        metadata={"title": "Memory used for building mesh, bytes"}
+    )
+    triangle_count: int = field(
+        default=0,
+        metadata={"title": "Number of triangles"}
+    )
+    degenerate_faces: int = field(
+        default=0,
+        metadata={"title": "Number of degenerate triangles"}
+    )
+    consistent_winding: bool = field(
+        default=False,
+        metadata={"title": "Is mesh manifold"}
+    )
+    watertight: bool = field(
+        default=False,
+        metadata={"title": "Is mesh watertight"}
+    )
 
 
 class AbstractAlgorithm(ABC):

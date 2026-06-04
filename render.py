@@ -56,11 +56,15 @@ def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
 
 
 def table_results(results: dict[str, AbstractAlgorithm]):
-    table_columns = [f.name for f in fields(FitMeta)]
+    table_columns = [{
+        "key": f.name,
+        "title": f.metadata["title"]
+    } for f in fields(FitMeta)]
 
     def process_item(item: AbstractAlgorithm):
         return {
-            col: getattr(item.meta, col) for col in table_columns
+            col["title"]: getattr(item.meta, col["key"])
+            for col in table_columns
         }
     return pd.DataFrame.from_dict({
         title: process_item(results[title])
