@@ -16,6 +16,7 @@ from flexicubes import FlexiCubes as FC
 
 
 NUMBER_OF_TEST_SAMPLES = 5000
+DEGENERATE_TRIANGLE_AREA = 1e-9
 
 type DimensionRange = tuple[float, float]
 type ResultDimensions = tuple[DimensionRange, DimensionRange, DimensionRange]
@@ -36,6 +37,8 @@ class FitMeta:
     rmse_error: float = field(default=0)
     elapsed_memory: int = field(default=0)
     triangle_count: int = field(default=0)
+    degenerate_faces: int = field(default=0)
+    consistent_winding: bool = field(default=False)
     watertight: bool = field(default=False)
 
 
@@ -101,6 +104,10 @@ class AbstractAlgorithm(ABC):
     def _calculate_deviation(self, r_function: AbstractRF):
         mesh = self.mesh
         self._meta.watertight = mesh.is_watertight
+        self._meta.consistent_winding = mesh.is_winding_consistent
+        self._meta.degenerate_faces = np.sum(
+            mesh.area_faces < DEGENERATE_TRIANGLE_AREA
+        )
         mesh = self._scale_mesh(mesh)
         points, face_index = trimesh.sample.sample_surface(
             mesh, NUMBER_OF_TEST_SAMPLES
