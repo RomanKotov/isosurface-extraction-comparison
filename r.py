@@ -133,9 +133,9 @@ class Sphere(AbstractRF):
     def compute(self, x, y, z):
         cx, cy, cz = self.center
         return self.radius**2 - (
-            (self.x-cx)**2 +
-            (self.y-cy)**2 +
-            (self.z-cz)**2
+            (x-cx)**2 +
+            (y-cy)**2 +
+            (z-cz)**2
         )
 
 

@@ -187,6 +187,7 @@ class FlexiCubes(AbstractAlgorithm):
             "method": options.get("method", "default"),
             "learning_rate": options.get("learning_rate", 0.05),
             "gradient_step": options.get("gradient_step", 1e-6),
+            "scale": options.get("scale", 1.0),
         }
 
     def _do_fit(self, r_function: AbstractRF):
@@ -206,6 +207,7 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
         sdf = r_function.compute(x, y, z)
@@ -224,6 +226,7 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
         sdf = r.compute(x, y, z)
@@ -255,6 +258,7 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3 *= self.settings["scale"]
 
         sdf = torch.rand_like(x_nx3[:, 0]) - 0.1
         sdf = torch.nn.Parameter(sdf.clone().detach(), requires_grad=True)
