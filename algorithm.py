@@ -103,6 +103,7 @@ class AbstractAlgorithm(ABC):
             tracemalloc.stop()
             gc.enable()
 
+        gc.collect()
         self._meta.triangle_count = len(faces)
         self._add_history_item("Result", vertices, faces)
         self._calculate_deviation(r_function)
