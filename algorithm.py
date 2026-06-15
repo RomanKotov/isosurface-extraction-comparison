@@ -187,7 +187,7 @@ class FlexiCubes(AbstractAlgorithm):
             "device": options.get("device", "cpu"),
             "method": options.get("method", "default"),
             "learning_rate": options.get("learning_rate", 0.05),
-            "gradient_step": options.get("gradient_step", 1e-6),
+            "gradient_step": options.get("gradient_step", 1e-9),
             "scale": options.get("scale", 1.0),
         }
 
