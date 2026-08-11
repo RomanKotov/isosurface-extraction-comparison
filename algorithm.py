@@ -189,6 +189,9 @@ class FlexiCubes(AbstractAlgorithm):
             "learning_rate": options.get("learning_rate", 0.05),
             "gradient_step": options.get("gradient_step", 1e-9),
             "scale": options.get("scale", 1.0),
+            "save_intermediate_results": options.get(
+                "save_intermediate_results", False
+            ),
         }
 
     def _do_fit(self, r_function: AbstractRF):
@@ -256,6 +259,7 @@ class FlexiCubes(AbstractAlgorithm):
         resolution = self.settings["resolution"]
         learning_rate = self.settings["learning_rate"]
         iterations = self.settings["iterations"]
+        save_intermediate = self.settings["save_intermediate_results"]
 
         fc = FC(device)
         x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
@@ -330,7 +334,7 @@ class FlexiCubes(AbstractAlgorithm):
             total_loss.backward()
             optimizer.step()
             scheduler.step()
-            if (it + 1) % 20 == 0:
+            if ((it + 1) % 20 == 0) and save_intermediate:
                 with torch.no_grad():
                     v, f, L_dev = fc(
                         grid_verts,
