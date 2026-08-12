@@ -11,8 +11,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from skimage.measure import marching_cubes
 
-from r import AbstractRF, Array3D
-from flexicubes import FlexiCubes as FC
+from .r import AbstractRF, Array3D
+from .flexicubes import FlexiCubes as FC
 
 
 NUMBER_OF_TEST_SAMPLES = 5000

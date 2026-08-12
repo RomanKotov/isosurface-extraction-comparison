@@ -1,4 +1,3 @@
 __pycache__/
 .ipynb_checkpoints/
-results/*
-!results/.keep
+.DS_Store
