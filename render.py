@@ -10,7 +10,7 @@ from matplotlib.colors import Normalize
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 from core.algorithm import AbstractAlgorithm, FitMeta
-from core.r import AbstractRF
+from core.function import AbstractFunction
 
 COLORMAP = plt.colormaps['Spectral']
 
@@ -26,14 +26,14 @@ def render_static(mesh: trimesh.Trimesh):
     plt.show()
 
 
-def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
+def render_diff(mesh: trimesh.Trimesh, function: AbstractFunction):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
 
     data = mesh.vertices[mesh.faces]
     n_faces, n_items, n_cols = data.shape
     reshaped = np.array(mesh.triangles_center)
-    diff = r_function.compute(
+    diff = function.compute(
         reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
     )
     diff_max = np.max(np.abs(diff))
@@ -57,7 +57,7 @@ def render_diff(mesh: trimesh.Trimesh, r_function: AbstractRF):
 
 
 def visualize_side_by_side(
-        r_function: AbstractRF,
+        function: AbstractFunction,
         results: dict[str, AbstractAlgorithm],
         suptitle: str
 ):
@@ -78,7 +78,7 @@ def visualize_side_by_side(
             data = mesh.vertices[mesh.faces]
             n_faces, n_items, n_cols = data.shape
             reshaped = np.array(mesh.triangles_center)
-            diff = r_function.compute(
+            diff = function.compute(
                 reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
             )
             diff_max = max(np.max(np.abs(diff)), diff_max)

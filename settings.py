@@ -1,5 +1,5 @@
 import core.algorithm as algorithm
-import core.r as r
+import core.function as fn
 
 
 # Isosurface algorithms
@@ -66,14 +66,14 @@ large_resolution_settings = [
 
 function_sphere = (
     "Sphere",
-    r.Sphere(radius=0.3),
+    fn.Sphere(radius=0.3),
     ((-.3, .3), (-.3, .3), (-.3, .3))
 )
 
 function_cube_with_hole = (
     "Cube with hole",
     (
-        r.Box(size=(0.2, 0.2, 0.2)) & ~r.CylinderZ(radius=0.1, height=8.0)
+        fn.Box(size=(0.2, 0.2, 0.2)) & ~fn.CylinderZ(radius=0.1, height=8.0)
     ),
     ((-.2, .2), (-.2, .2), (-.2, .2))
 )
@@ -81,7 +81,7 @@ function_cube_with_hole = (
 function_cube_with_hole_thin_walls = (
     "Cube with hole, thin walls",
     (
-        r.Box(size=(0.2, 0.2, 0.2)) & ~r.CylinderZ(radius=0.18, height=8.0)
+        fn.Box(size=(0.2, 0.2, 0.2)) & ~fn.CylinderZ(radius=0.18, height=8.0)
     ),
     ((-.2, .2), (-.2, .2), (-.2, .2))
 )
@@ -89,7 +89,7 @@ function_cube_with_hole_thin_walls = (
 function_cube_with_hole_close_to_max = (
     "Cube with hole, close to max",
     (
-        r.Box(size=(0.49, 0.49, 0.49)) & ~r.CylinderZ(radius=0.1, height=8.0)
+        fn.Box(size=(0.49, 0.49, 0.49)) & ~fn.CylinderZ(radius=0.1, height=8.0)
     ),
     ((-.49, .49), (-.49, .49), (-.49, .49))
 )

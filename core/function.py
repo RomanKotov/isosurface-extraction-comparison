@@ -8,21 +8,23 @@ type Array3D = np.ndarray[Tuple[int, int, int], np.float64]
 type Point3D = Tuple[float, float, float]
 
 
-class RFunctionInfo(TypedDict):
+class FunctionInfo(TypedDict):
     title: str
     params: dict
     children: list[Self] | None
 
 
-class AbstractRF(ABC):
+class AbstractFunction(ABC):
     @abstractmethod
     def compute(self, x: Array1D, y: Array1D, z: Array1D) -> Array1D:
         pass
 
     @abstractmethod
-    def to_dict(self) -> RFunctionInfo:
+    def to_dict(self) -> FunctionInfo:
         pass
 
+
+class AbstractRF(AbstractFunction):
     def __str__(self) -> str:
         return json.dumps(self.to_dict(), indent=2)
 
@@ -62,7 +64,7 @@ class AbstractBinaryRF(AbstractRF):
         self.operation = operation
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title=f"Binary Operation ({self.operation})",
             children=[self.f1.to_dict(), self.f2.to_dict()]
         )
@@ -76,7 +78,7 @@ class Negate(AbstractRF):
         return -(self.fn.compute(x, y, z))
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title="Negate",
             children=[self.fn.to_dict()]
         )
@@ -122,7 +124,7 @@ class Sphere(AbstractRF):
         self.center = center
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title="Sphere",
             params={
                 "center": self.center,
@@ -149,7 +151,7 @@ class Box(AbstractRF):
         self.center = center
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title="Box",
             params={
                 "center": self.center,
@@ -179,7 +181,7 @@ class CylinderZ(AbstractRF):
         self.height = height
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title="CylinderZ",
             params={
                 "center": self.center,
@@ -208,7 +210,7 @@ class Torus(AbstractRF):
         self.r_minor = r_minor
 
     def to_dict(self):
-        return RFunctionInfo(
+        return FunctionInfo(
             title="Tours",
             params={
                 "center": self.center,

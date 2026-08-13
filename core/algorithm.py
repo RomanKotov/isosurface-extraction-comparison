@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from skimage.measure import marching_cubes
 
-from .r import AbstractRF, Array3D
+from .function import AbstractFunction, Array3D
 from .flexicubes import FlexiCubes as FC
 
 
@@ -85,7 +85,7 @@ class AbstractAlgorithm(ABC):
     def _do_fit(self, r_function) -> IntermediateMeshResult:
         raise NotImplementedError("Unable to fit this algorithm")
 
-    def fit(self, r_function: AbstractRF, dimensions: ResultDimensions):
+    def fit(self, function: AbstractFunction, dimensions: ResultDimensions):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
         self._result_dimensions = dimensions
@@ -94,7 +94,7 @@ class AbstractAlgorithm(ABC):
         memory_start, peak_start = tracemalloc.get_traced_memory()
         start = time.perf_counter()
         try:
-            vertices, faces = self._do_fit(r_function)
+            vertices, faces = self._do_fit(function)
         finally:
             memory_end, peak_end = tracemalloc.get_traced_memory()
             end = time.perf_counter()
@@ -106,7 +106,7 @@ class AbstractAlgorithm(ABC):
         gc.collect()
         self._meta.triangle_count = len(faces)
         self._add_history_item("Result", vertices, faces)
-        self._calculate_deviation(r_function)
+        self._calculate_deviation(function)
 
     @property
     def meta(self):
@@ -129,7 +129,7 @@ class AbstractAlgorithm(ABC):
         ) - abs(dimensions[:, 0])
         return trimesh.Trimesh(vertices=scaled_vertices, faces=mesh.faces)
 
-    def _calculate_deviation(self, r_function: AbstractRF):
+    def _calculate_deviation(self, r_function: AbstractFunction):
         mesh = self.mesh
         self._meta.watertight = mesh.is_watertight
         self._meta.consistent_winding = mesh.is_winding_consistent
@@ -160,14 +160,14 @@ class MarchingCubes(AbstractAlgorithm):
             "method": options.get("method", "lewiner"),
         }
 
-    def _do_fit(self, r_function: AbstractRF):
+    def _do_fit(self, r_function: AbstractFunction):
         volume = self._get_volume(r_function)
         verts, faces, normals, values = marching_cubes(
             volume, level=0.0, method=self.settings["method"]
         )
         return verts, faces
 
-    def _get_volume(self, r_function: AbstractRF):
+    def _get_volume(self, r_function: AbstractFunction):
         xmin, xmax = -.5, .5
         ymin, ymax = -.5, .5
         zmin, zmax = -.5, .5
@@ -194,7 +194,7 @@ class FlexiCubes(AbstractAlgorithm):
             ),
         }
 
-    def _do_fit(self, r_function: AbstractRF):
+    def _do_fit(self, r_function: AbstractFunction):
         match self.settings["method"]:
             case "default":
                 return self.fit_default(r_function)
@@ -205,7 +205,7 @@ class FlexiCubes(AbstractAlgorithm):
             case method:
                 raise ValueError(f"Unknown learning method {method}")
 
-    def fit_default(self, r_function: AbstractRF):
+    def fit_default(self, r_function: AbstractFunction):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
 
@@ -224,7 +224,7 @@ class FlexiCubes(AbstractAlgorithm):
         )
         return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
-    def fit_gradient(self, r: AbstractRF):
+    def fit_gradient(self, r: AbstractFunction):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
 
@@ -254,7 +254,7 @@ class FlexiCubes(AbstractAlgorithm):
         )
         return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
-    def fit_learn(self, r_function: AbstractRF):
+    def fit_learn(self, r_function: AbstractFunction):
         device = self.settings["device"]
         resolution = self.settings["resolution"]
         learning_rate = self.settings["learning_rate"]
