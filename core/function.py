@@ -24,7 +24,7 @@ class AbstractFunction(ABC):
         pass
 
 
-class AbstractRF(AbstractFunction):
+class AbstractRFunction(AbstractFunction):
     def __str__(self) -> str:
         return json.dumps(self.to_dict(), indent=2)
 
@@ -57,8 +57,8 @@ class AbstractRF(AbstractFunction):
         return cls._and(f1, cls._not(f2))
 
 
-class AbstractBinaryRF(AbstractRF):
-    def __init__(self, f1: AbstractRF, f2: AbstractRF, operation: str):
+class AbstractBinaryRF(AbstractRFunction):
+    def __init__(self, f1: AbstractRFunction, f2: AbstractRFunction, operation: str):
         self.f1 = f1
         self.f2 = f2
         self.operation = operation
@@ -70,8 +70,8 @@ class AbstractBinaryRF(AbstractRF):
         )
 
 
-class Negate(AbstractRF):
-    def __init__(self, fn: AbstractRF):
+class Negate(AbstractRFunction):
+    def __init__(self, fn: AbstractRFunction):
         self.fn = fn
 
     def compute(self, x, y, z):
@@ -114,7 +114,7 @@ class Sub(AbstractBinaryRF):
         return self._sub(f1, f2)
 
 
-class Sphere(AbstractRF):
+class Sphere(AbstractRFunction):
     def __init__(
             self,
             center: Point3D = (0, 0, 0),
@@ -141,7 +141,7 @@ class Sphere(AbstractRF):
         )
 
 
-class Box(AbstractRF):
+class Box(AbstractRFunction):
     def __init__(
             self,
             center: Point3D = (0, 0, 0),
@@ -168,7 +168,7 @@ class Box(AbstractRF):
         return self._and(self._and(f_x, f_y), f_z)
 
 
-class CylinderZ(AbstractRF):
+class CylinderZ(AbstractRFunction):
     def __init__(
             self,
             center: Point3D = (0, 0, 0),
@@ -197,7 +197,7 @@ class CylinderZ(AbstractRF):
         return self._and(f_circle, f_height)
 
 
-class Torus(AbstractRF):
+class Torus(AbstractRFunction):
     def __init__(
             self,
             center: Point3D = (0, 0, 0),
@@ -223,3 +223,26 @@ class Torus(AbstractRF):
         cx, cy, cz = self.center
         d_xy = np.sqrt((x - cx)**2 + (y - cy)**2)
         return self.r_minor**2 - (d_xy - self.r_major)**2 - (z - cz)**2
+
+
+class SDFSphere(AbstractFunction):
+    def __init__(
+            self,
+            center: Point3D = (0, 0, 0),
+            radius: float = 1.0,
+    ):
+        self.radius = radius
+        self.center = center
+
+    def to_dict(self):
+        return FunctionInfo(
+            title="SDF Sphere",
+            params={
+                "center": self.center,
+                "radius": self.radius,
+            }
+        )
+
+    def compute(self, x, y, z):
+        cx, cy, cz = self.center
+        return np.sqrt((x-cx)**2 + (y-cy)**2 + (z-cz)**2) - self.radius

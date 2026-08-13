@@ -70,6 +70,13 @@ function_sphere = (
     ((-.3, .3), (-.3, .3), (-.3, .3))
 )
 
+function_sdf_sphere = (
+    "SDF sphere",
+    fn.SDFSphere(radius=0.3),
+    ((-.3, .3), (-.3, .3), (-.3, .3))
+)
+
+
 function_cube_with_hole = (
     "Cube with hole",
     (

@@ -10,12 +10,12 @@ from matplotlib.colors import Normalize
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 from core.algorithm import AbstractAlgorithm, FitMeta
-from core.function import AbstractFunction
+from core.function import AbstractRFunction
 
 COLORMAP = plt.colormaps['Spectral']
 
 type AlgorithmResults = dict[str, AbstractAlgorithm]
-type FunctionResults = dict[str, tuple[AbstractAlgorithm, AbstractFunction]]
+type FunctionResults = dict[str, tuple[AbstractAlgorithm, AbstractRFunction]]
 
 
 def render_static(mesh: trimesh.Trimesh):
@@ -29,7 +29,7 @@ def render_static(mesh: trimesh.Trimesh):
     plt.show()
 
 
-def render_diff(mesh: trimesh.Trimesh, function: AbstractFunction):
+def render_diff(mesh: trimesh.Trimesh, function: AbstractRFunction):
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111, projection='3d')
 
@@ -60,7 +60,7 @@ def render_diff(mesh: trimesh.Trimesh, function: AbstractFunction):
 
 
 def visualize_algorithms_side_by_side(
-        function: AbstractFunction,
+        function: AbstractRFunction,
         results: AlgorithmResults,
         suptitle: str
 ):

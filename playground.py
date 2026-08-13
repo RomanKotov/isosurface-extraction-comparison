@@ -20,8 +20,8 @@ def visualize_algorithm_diff(algorithm, functions, settings):
 
 
 visualize_algorithm_diff(
-    s.algorithm_marhing_cubes_lorensen,
-    [s.function_cube_with_hole, s.function_cube_with_hole_close_to_max],
+    s.algorithm_flexicubes_default,
+    [s.function_sphere, s.function_sdf_sphere],
     [("playground resolution", {'resolution': 10})]
 )
 
