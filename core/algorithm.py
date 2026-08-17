@@ -211,7 +211,7 @@ class MarchingCubes(AbstractAlgorithm):
 class FlexiCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
-            "resolution": options.get("resolution", 5),
+            "resolution": options.get("resolution", 5) - 1,
             "iterations": options.get("iterations", 400),
             "device": options.get("device", "cpu"),
             "method": options.get("method", "default"),
