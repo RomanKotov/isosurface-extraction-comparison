@@ -53,7 +53,13 @@ def render_diff(mesh: trimesh.Trimesh, function: AbstractRFunction):
     sm = cm.ScalarMappable(norm=norm, cmap=COLORMAP)
     sm.set_array([])
     fig.subplots_adjust(right=0.95)
-    fig.colorbar(sm, ax=ax, shrink=0.7, pad=0.04, label="Difference")
+    fig.colorbar(
+        sm,
+        ax=ax,
+        shrink=0.7,
+        pad=0.04,
+        label="Function residual F(p)",
+    )
 
     plt.tight_layout()
     plt.show()
@@ -111,7 +117,13 @@ def visualize_algorithms_side_by_side(
     sm = cm.ScalarMappable(norm=norm, cmap=COLORMAP)
     sm.set_array([])
     fig.subplots_adjust(right=0.95, hspace=0.02)
-    fig.colorbar(sm, ax=axes, shrink=0.8, pad=0.02, label="Difference")
+    fig.colorbar(
+        sm,
+        ax=axes,
+        shrink=0.8,
+        pad=0.02,
+        label="Function residual F(p)",
+    )
     fig.suptitle(suptitle)
 
     plt.show()
@@ -168,7 +180,13 @@ def visualize_functions_side_by_side(
     sm = cm.ScalarMappable(norm=norm, cmap=COLORMAP)
     sm.set_array([])
     fig.subplots_adjust(right=0.95, hspace=0.02)
-    fig.colorbar(sm, ax=axes, shrink=0.8, pad=0.02, label="Difference")
+    fig.colorbar(
+        sm,
+        ax=axes,
+        shrink=0.8,
+        pad=0.02,
+        label="Function residual F(p)",
+    )
     fig.suptitle(suptitle)
 
     plt.show()

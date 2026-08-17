@@ -37,19 +37,19 @@ class FitMeta:
     )
     mean_error: float = field(
         default=0,
-        metadata={"title": "Mean Error"}
+        metadata={"title": "Mean absolute function residual (MAE)"}
     )
     max_error: float = field(
         default=0,
-        metadata={"title": "Max Error"}
+        metadata={"title": "Maximum absolute function residual"}
     )
     rmse_error: float = field(
         default=0,
-        metadata={"title": "RMSE Error"}
+        metadata={"title": "Function residual RMSE"}
     )
     elapsed_memory: int = field(
         default=0,
-        metadata={"title": "Memory used for building mesh, bytes"}
+        metadata={"title": "Peak Python-traced memory, bytes"}
     )
     triangle_count: int = field(
         default=0,
@@ -59,9 +59,17 @@ class FitMeta:
         default=0,
         metadata={"title": "Number of degenerate triangles"}
     )
+    mean_triangle_quality: float = field(
+        default=0,
+        metadata={"title": "Mean triangle quality"}
+    )
+    low_quality_faces: int = field(
+        default=0,
+        metadata={"title": "Triangles with quality < 0.1"}
+    )
     consistent_winding: bool = field(
         default=False,
-        metadata={"title": "Is mesh manifold"}
+        metadata={"title": "Is mesh winding consistent"}
     )
     watertight: bool = field(
         default=False,
@@ -91,7 +99,7 @@ class AbstractAlgorithm(ABC):
         self._result_dimensions = dimensions
         gc.disable()
         tracemalloc.start()
-        memory_start, peak_start = tracemalloc.get_traced_memory()
+        memory_start, _peak_start = tracemalloc.get_traced_memory()
         start = time.perf_counter()
         try:
             vertices, faces = self._do_fit(function)
@@ -99,7 +107,7 @@ class AbstractAlgorithm(ABC):
             memory_end, peak_end = tracemalloc.get_traced_memory()
             end = time.perf_counter()
             self._meta.elapsed_time_seconds = end - start
-            self._meta.elapsed_memory = memory_end - memory_start
+            self._meta.elapsed_memory = max(0, peak_end - memory_start)
             tracemalloc.stop()
             gc.enable()
 
@@ -137,6 +145,18 @@ class AbstractAlgorithm(ABC):
             mesh.area_faces < DEGENERATE_TRIANGLE_AREA
         )
         mesh = self._scale_mesh(mesh)
+        if len(mesh.faces) > 0:
+            edge_vectors = np.roll(mesh.triangles, -1, axis=1) - mesh.triangles
+            squared_edge_lengths = np.sum(edge_vectors**2, axis=2)
+            denominator = np.sum(squared_edge_lengths, axis=1)
+            quality = np.divide(
+                4 * np.sqrt(3) * mesh.area_faces,
+                denominator,
+                out=np.zeros_like(mesh.area_faces),
+                where=denominator > 0,
+            )
+            self._meta.mean_triangle_quality = np.mean(quality)
+            self._meta.low_quality_faces = np.sum(quality < 0.1)
         points, face_index = trimesh.sample.sample_surface(
             mesh, NUMBER_OF_TEST_SAMPLES
         )
@@ -149,7 +169,11 @@ class AbstractAlgorithm(ABC):
         self._add_history_item("Scaled result", mesh.vertices, mesh.faces)
 
     def _add_history_item(self, title: str, vertices: Array3D, faces: Array3D):
-        mesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+        mesh = trimesh.Trimesh(
+            vertices=vertices,
+            faces=faces,
+            process=False,
+        )
         self._history.append(HistoryItem(title=title, mesh=mesh))
 
 
@@ -162,8 +186,13 @@ class MarchingCubes(AbstractAlgorithm):
 
     def _do_fit(self, r_function: AbstractRFunction):
         volume = self._get_volume(r_function)
+        resolution = self.settings["resolution"]
+        cell_size = 1.0 / resolution
         verts, faces, normals, values = marching_cubes(
-            volume, level=0.0, method=self.settings["method"]
+            volume,
+            level=0.0,
+            spacing=(cell_size, cell_size, cell_size),
+            method=self.settings["method"],
         )
         return verts, faces
 
