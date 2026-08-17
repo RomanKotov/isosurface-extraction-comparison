@@ -76,7 +76,6 @@ function_sdf_sphere = (
     ((-.3, .3), (-.3, .3), (-.3, .3))
 )
 
-
 function_cube_with_hole = (
     "Cube with hole",
     (
@@ -99,4 +98,20 @@ function_cube_with_hole_close_to_max = (
         fn.Box(size=(0.49, 0.49, 0.49)) & ~fn.CylinderZ(radius=0.1, height=8.0)
     ),
     ((-.49, .49), (-.49, .49), (-.49, .49))
+)
+
+function_arc = (
+    "Arc",
+    (
+        fn.Arc(
+            center=(0, 0, 0),
+            r1=.2,
+            r2=.4,
+            r3=.1,
+            d1=.3,
+            d2=.1,
+            d3=.8,
+        )
+    ),
+    ((-.45, .45), (-.45, .45), (-.45, .45))
 )

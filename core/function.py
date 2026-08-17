@@ -225,6 +225,58 @@ class Torus(AbstractRFunction):
         return self.r_minor**2 - (d_xy - self.r_major)**2 - (z - cz)**2
 
 
+class Arc(AbstractRFunction):
+    def __init__(self,
+                 center: Point3D = (0, 0, 0),
+                 r1: float = 0.5,
+                 r2: float = 0.4,
+                 r3: float = 0.3,
+                 d1: float = 0.4,
+                 d2: float = 0.1,
+                 d3: float = 0.2
+                 ):
+        self.center = center
+        self.r1 = r1
+        self.r2 = r2
+        self.r3 = r3
+        self.d1 = d1
+        self.d2 = d2
+        self.d3 = d3
+        self.function = (CylinderZ(
+            center=center,
+            radius=r1,
+            height=d1
+        ) | CylinderZ(
+            center=center,
+            radius=r2,
+            height=d2
+        )) - CylinderZ(
+            center=center,
+            radius=r3,
+            height=d3
+        ) - Box(
+            center=(-.5, 0, 0),
+            size=(.5, .5, .5)
+        )
+
+    def to_dict(self):
+        return FunctionInfo(
+            title="Arc",
+            params={
+                "center": self.center,
+                "r1": self.r1,
+                "r2": self.r2,
+                "r3": self.r3,
+                "d1": self.d1,
+                "d2": self.d2,
+                "d3": self.d3,
+            }
+        )
+
+    def compute(self, x, y, z):
+        return self.function.compute(x, y, z)
+
+
 class SDFSphere(AbstractFunction):
     def __init__(
             self,
