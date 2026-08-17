@@ -186,12 +186,9 @@ class MarchingCubes(AbstractAlgorithm):
 
     def _do_fit(self, r_function: AbstractRFunction):
         volume = self._get_volume(r_function)
-        resolution = self.settings["resolution"]
-        cell_size = 1.0 / resolution
         verts, faces, normals, values = marching_cubes(
             volume,
             level=0.0,
-            spacing=(cell_size, cell_size, cell_size),
             method=self.settings["method"],
         )
         return verts, faces
