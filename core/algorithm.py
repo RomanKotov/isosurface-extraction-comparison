@@ -1,7 +1,8 @@
 import gc
+import os
+import psutil
 import time
 import torch
-import tracemalloc
 import trimesh
 import tqdm
 
@@ -124,18 +125,17 @@ class AbstractAlgorithm(ABC):
         self._history: list[HistoryItem] = []
         self._grid = GridSpec(bounds=bounds, cells=self.settings["cells"])
         self._function = function
+        process = psutil.Process(os.getpid())
         gc.disable()
-        tracemalloc.start()
-        memory_start, _peak_start = tracemalloc.get_traced_memory()
+        memory_start = process.memory_info().rss
         start = time.perf_counter()
         try:
             vertices, faces = self._do_fit(function)
         finally:
-            memory_end, peak_end = tracemalloc.get_traced_memory()
+            memory_end = process.memory_info().rss
             end = time.perf_counter()
             self._meta.elapsed_time_seconds = end - start
-            self._meta.elapsed_memory = max(0, peak_end - memory_start)
-            tracemalloc.stop()
+            self._meta.elapsed_memory = max(0, memory_end - memory_start)
             gc.enable()
 
         gc.collect()
