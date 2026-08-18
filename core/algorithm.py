@@ -268,7 +268,7 @@ class FlexiCubes(AbstractAlgorithm):
             df_dx = (r.compute(x + h, y, z) - r.compute(x - h, y, z)) / dh
             df_dy = (r.compute(x, y + h, z) - r.compute(x, y - h, z)) / dh
             df_dz = (r.compute(x, y, z + h) - r.compute(x, y, z - h)) / dh
-            result = torch.stack([df_dx, df_dy, df_dz], axis=1)
+            result = torch.cat([df_dx, df_dy, df_dz], axis=1)
             return result
 
         vertices, faces, L_dev = fc(
