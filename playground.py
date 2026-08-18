@@ -22,12 +22,12 @@ def visualize_algorithm_diff(algorithm, functions, settings):
 visualize_algorithm_diff(
     s.algorithm_flexicubes_default,
     [s.function_sphere, s.function_sdf_sphere],
-    [("playground resolution", {'resolution': 10})]
+    [("playground resolution", {'cells': 10})]
 )
 
 
 visualize_function_diff(
     s.algorithms_marching_cubes,
     s.function_cube_with_hole,
-    [("playground resolution", {'resolution': 10})]
+    [("playground resolution", {'cells': 10})]
 )

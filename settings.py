@@ -54,11 +54,11 @@ all_algorithms = [
 # Resolution settings
 
 resolution_settings = [
-    (f"resolution={r}", {"resolution": r}) for r in [10, 20, 30]
+    (f"cells={r}", {"cells": r}) for r in [10, 20, 30]
 ]
 
 large_resolution_settings = [
-    (f"resolution={r}", {"resolution": r}) for r in [64, 128, 256]
+    (f"cells={r}", {"cells": r}) for r in [64, 128, 256]
 ]
 
 
@@ -81,7 +81,7 @@ function_cube_with_hole = (
     (
         fn.Box(size=(0.2, 0.2, 0.2)) & ~fn.CylinderZ(radius=0.1, height=8.0)
     ),
-    ((-.2, .2), (-.2, .2), (-.2, .2))
+    ((-.21, .21), (-.21, .21), (-.21, .21))
 )
 
 function_cube_with_hole_thin_walls = (
@@ -89,15 +89,7 @@ function_cube_with_hole_thin_walls = (
     (
         fn.Box(size=(0.2, 0.2, 0.2)) & ~fn.CylinderZ(radius=0.18, height=8.0)
     ),
-    ((-.2, .2), (-.2, .2), (-.2, .2))
-)
-
-function_cube_with_hole_close_to_max = (
-    "Cube with hole, close to max",
-    (
-        fn.Box(size=(0.49, 0.49, 0.49)) & ~fn.CylinderZ(radius=0.1, height=8.0)
-    ),
-    ((-.49, .49), (-.49, .49), (-.49, .49))
+    ((-.21, .21), (-.21, .21), (-.21, .21))
 )
 
 function_arc = (

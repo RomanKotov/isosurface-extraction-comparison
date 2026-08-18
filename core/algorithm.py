@@ -19,7 +19,7 @@ NUMBER_OF_TEST_SAMPLES = 5000
 DEGENERATE_TRIANGLE_AREA = 1e-9
 
 type DimensionRange = tuple[float, float]
-type ResultDimensions = tuple[DimensionRange, DimensionRange, DimensionRange]
+type ResultBounds = tuple[DimensionRange, DimensionRange, DimensionRange]
 type IntermediateMeshResult = tuple[Array3D, Array3D]
 
 
@@ -27,6 +27,28 @@ type IntermediateMeshResult = tuple[Array3D, Array3D]
 class HistoryItem:
     title: str
     mesh: trimesh.Trimesh
+
+
+@dataclass(frozen=True)
+class GridSpec:
+    bounds: ResultBounds
+    cells: int
+
+    @property
+    def lower(self):
+        return np.array([b[0] for b in self.bounds], dtype=np.float64)
+
+    @property
+    def upper(self):
+        return np.array([b[1] for b in self.bounds], dtype=np.float64)
+
+    @property
+    def spacing(self):
+        return (self.upper - self.lower) / self.cells
+
+    @property
+    def nodes(self):
+        return self.cells + 1
 
 
 @dataclass
@@ -93,10 +115,10 @@ class AbstractAlgorithm(ABC):
     def _do_fit(self, r_function) -> IntermediateMeshResult:
         raise NotImplementedError("Unable to fit this algorithm")
 
-    def fit(self, function: AbstractRFunction, dimensions: ResultDimensions):
+    def fit(self, function: AbstractRFunction, bounds: ResultBounds):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
-        self._result_dimensions = dimensions
+        self._grid = GridSpec(bounds=bounds, cells=self.settings["cells"])
         gc.disable()
         tracemalloc.start()
         memory_start, _peak_start = tracemalloc.get_traced_memory()
@@ -128,15 +150,6 @@ class AbstractAlgorithm(ABC):
     def mesh(self):
         return self._history[-1].mesh
 
-    def _scale_mesh(self, mesh: trimesh.Trimesh):
-        dimensions = np.array(self._result_dimensions)
-        v = mesh.vertices
-        scaled_vertices = (v - v.min()) / (v.max() - v.min())
-        scaled_vertices = (
-            scaled_vertices * (dimensions[:, 1] - dimensions[:, 0]).T
-        ) - abs(dimensions[:, 0])
-        return trimesh.Trimesh(vertices=scaled_vertices, faces=mesh.faces)
-
     def _calculate_deviation(self, r_function: AbstractRFunction):
         mesh = self.mesh
         self._meta.watertight = mesh.is_watertight
@@ -144,7 +157,6 @@ class AbstractAlgorithm(ABC):
         self._meta.degenerate_faces = np.sum(
             mesh.area_faces < DEGENERATE_TRIANGLE_AREA
         )
-        mesh = self._scale_mesh(mesh)
         if len(mesh.faces) > 0:
             edge_vectors = np.roll(mesh.triangles, -1, axis=1) - mesh.triangles
             squared_edge_lengths = np.sum(edge_vectors**2, axis=2)
@@ -180,7 +192,7 @@ class AbstractAlgorithm(ABC):
 class MarchingCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
-            "resolution": options.get("resolution", 5),
+            "cells": options.get("cells", 5),
             "method": options.get("method", "lewiner"),
         }
 
@@ -189,26 +201,26 @@ class MarchingCubes(AbstractAlgorithm):
         verts, faces, normals, values = marching_cubes(
             volume,
             level=0.0,
+            spacing=tuple(self._grid.spacing),
             method=self.settings["method"],
+            allow_degenerate=True
         )
+        verts += self._grid.lower
         return verts, faces
 
     def _get_volume(self, r_function: AbstractRFunction):
-        xmin, xmax = -.5, .5
-        ymin, ymax = -.5, .5
-        zmin, zmax = -.5, .5
-        resolution = self.settings["resolution"]
-        x = np.linspace(xmin, xmax, resolution)
-        y = np.linspace(ymin, ymax, resolution)
-        z = np.linspace(zmin, zmax, resolution)
-        X, Y, Z = np.meshgrid(x, y, z, indexing="ij")
+        axes = [
+            np.linspace(lo, hi, self._grid.nodes, dtype=np.float64)
+            for lo, hi in self._grid.bounds
+        ]
+        X, Y, Z = np.meshgrid(*axes, indexing="ij")
         return r_function.compute(X, Y, Z)
 
 
 class FlexiCubes(AbstractAlgorithm):
     def parse_settings(self, options):
         return {
-            "resolution": options.get("resolution", 5) - 1,
+            "cells": options.get("cells", 5),
             "iterations": options.get("iterations", 400),
             "device": options.get("device", "cpu"),
             "method": options.get("method", "default"),
@@ -231,12 +243,24 @@ class FlexiCubes(AbstractAlgorithm):
             case method:
                 raise ValueError(f"Unknown learning method {method}")
 
+    def construct_fc_grid(self, fc):
+        unit_vertices, cubes = fc.construct_voxel_grid(self._grid.cells)
+        device = self.settings["device"]
+        lower = torch.tensor(
+            self._grid.lower, dtype=unit_vertices.dtype, device=device
+        )
+        upper = torch.tensor(
+            self._grid.upper, dtype=unit_vertices.dtype, device=device
+        )
+        vertices = lower + (unit_vertices + 0.5) * (upper - lower)
+        return vertices, cubes
+
     def fit_default(self, r_function: AbstractRFunction):
         device = self.settings["device"]
-        resolution = self.settings["resolution"]
+        cells = self.settings["cells"]
 
         fc = FC(device)
-        x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3, cube_fx8 = self.construct_fc_grid(fc)
         x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
@@ -246,16 +270,16 @@ class FlexiCubes(AbstractAlgorithm):
             x_nx3,
             sdf,
             cube_fx8,
-            resolution
+            cells
         )
         return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
     def fit_gradient(self, r: AbstractRFunction):
         device = self.settings["device"]
-        resolution = self.settings["resolution"]
+        cells = self.settings["cells"]
 
         fc = FC(device)
-        x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3, cube_fx8 = self.construct_fc_grid(fc)
         x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
@@ -275,20 +299,20 @@ class FlexiCubes(AbstractAlgorithm):
             x_nx3,
             sdf,
             cube_fx8,
-            resolution,
+            cells,
             grad_func=grad_f
         )
         return vertices.detach().cpu().numpy(), faces.detach().cpu().numpy()
 
     def fit_learn(self, r_function: AbstractRFunction):
         device = self.settings["device"]
-        resolution = self.settings["resolution"]
+        cells = self.settings["cells"]
         learning_rate = self.settings["learning_rate"]
         iterations = self.settings["iterations"]
         save_intermediate = self.settings["save_intermediate_results"]
 
         fc = FC(device)
-        x_nx3, cube_fx8 = fc.construct_voxel_grid(resolution)
+        x_nx3, cube_fx8 = self.construct_fc_grid(fc)
         x_nx3 *= self.settings["scale"]
 
         sdf = torch.rand_like(x_nx3[:, 0]) - 0.1
@@ -303,13 +327,13 @@ class FlexiCubes(AbstractAlgorithm):
         deform = torch.nn.Parameter(
             torch.zeros_like(x_nx3), requires_grad=True
         )
-        grid_verts = x_nx3 + (2-1e-8) / (resolution * 2) * torch.tanh(deform)
+        grid_verts = x_nx3 + (2-1e-8) / (cells * 2) * torch.tanh(deform)
 
         vertices, faces, L_dev = fc(
             grid_verts,
             sdf,
             cube_fx8,
-            resolution,
+            cells,
             beta_fx12=weight[:, :12],
             alpha_fx8=weight[:, 12:20],
             gamma_f=weight[:, 20],
@@ -345,13 +369,13 @@ class FlexiCubes(AbstractAlgorithm):
         for it in tqdm.tqdm(range(iterations)):
             optimizer.zero_grad()
             grid_verts = (
-                x_nx3 + (2 - 1e-8) / (resolution * 2) * torch.tanh(deform)
+                x_nx3 + (2 - 1e-8) / (cells * 2) * torch.tanh(deform)
             )
             vertices, faces, L_dev = fc(
                 grid_verts,
                 sdf,
                 cube_fx8,
-                resolution,
+                cells,
                 beta_fx12=weight[:, :12],
                 alpha_fx8=weight[:, 12:20],
                 gamma_f=weight[:, 20],
@@ -368,7 +392,7 @@ class FlexiCubes(AbstractAlgorithm):
                         grid_verts,
                         sdf,
                         cube_fx8,
-                        resolution,
+                        cells,
                         beta_fx12=weight[:, :12],
                         alpha_fx8=weight[:, 12:20],
                         gamma_f=weight[:, 20],
@@ -384,7 +408,7 @@ class FlexiCubes(AbstractAlgorithm):
                 grid_verts,
                 sdf,
                 cube_fx8,
-                resolution,
+                cells,
                 beta_fx12=weight[:, :12],
                 alpha_fx8=weight[:, 12:20],
                 gamma_f=weight[:, 20],
