@@ -337,14 +337,16 @@ class FlexiCubes(AbstractAlgorithm):
             return r_function.compute(x, y, z)
 
         def sdf_diff(sdf, verts):
-            target = res(verts).reshape(-1)
+            target = res(verts.detach()).reshape(-1)
             diff = ((target.nan_to_num(0.1)-sdf.nan_to_num(0.1))**2).mean()
             diff = ((target-sdf)**2).mean()
             return diff
 
         for it in tqdm.tqdm(range(iterations)):
             optimizer.zero_grad()
-            grid_verts = x_nx3
+            grid_verts = (
+                x_nx3 + (2 - 1e-8) / (resolution * 2) * torch.tanh(deform)
+            )
             vertices, faces, L_dev = fc(
                 grid_verts,
                 sdf,
