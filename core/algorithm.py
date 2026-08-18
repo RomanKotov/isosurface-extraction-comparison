@@ -107,6 +107,10 @@ class AbstractAlgorithm(ABC):
     def __str__(self):
         return f"{self.__class__.__name__}({self.options})"
 
+    @property
+    def function(self):
+        return self._function
+
     @abstractmethod
     def parse_settings(self, options: dict) -> dict:
         raise NotImplementedError("Unable to parse options")
@@ -119,6 +123,7 @@ class AbstractAlgorithm(ABC):
         self._meta = FitMeta()
         self._history: list[HistoryItem] = []
         self._grid = GridSpec(bounds=bounds, cells=self.settings["cells"])
+        self._function = function
         gc.disable()
         tracemalloc.start()
         memory_start, _peak_start = tracemalloc.get_traced_memory()

@@ -34,7 +34,7 @@ def process_single_algorithm_many_functions(
         print(f"Processing: {fun_name}")
         algo = Algorithm(updated_settings)
         algo.fit(fun, dimensions)
-        results[fun_name] = (algo, fun)
+        results[fun_name] = algo
     return results
 
 
