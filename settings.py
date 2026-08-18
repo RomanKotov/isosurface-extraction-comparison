@@ -54,11 +54,11 @@ all_algorithms = [
 # Resolution settings
 
 resolution_settings = [
-    (f"cells={r}", {"cells": r}) for r in [10, 20, 30]
+    (f"cells={r}", {"cells": r}) for r in [8, 16, 24]
 ]
 
 large_resolution_settings = [
-    (f"cells={r}", {"cells": r}) for r in [64, 128, 256]
+    (f"cells={r}", {"cells": r}) for r in [32, 64, 128]
 ]
 
 
@@ -100,10 +100,10 @@ function_arc = (
             r1=.2,
             r2=.4,
             r3=.1,
-            d1=.3,
-            d2=.1,
+            d1=.6,
+            d2=.2,
             d3=.8,
         )
     ),
-    ((-.45, .45), (-.45, .45), (-.45, .45))
+    ((-.01, .41), (-.41, .41), (-.41, .41))
 )

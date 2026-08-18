@@ -45,6 +45,7 @@ def visualize_side_by_side(
                 "diff": diff,
                 "data": data,
                 "position": (nrows, ncols, row * ncols + col + 1),
+                "bounds": algorithm._grid.bounds
             })
 
     diff_min = -diff_max
@@ -61,6 +62,11 @@ def visualize_side_by_side(
         ax.add_collection3d(m)
         ax.set_box_aspect([1, 1, 1])
         ax.set_title(item["title"])
+        x, y, z = item["bounds"]
+        ax.set_xlim(x)
+        ax.set_ylim(y)
+        ax.set_zlim(z)
+        ax.axis('scaled')
         axes.append(ax)
 
     sm = cm.ScalarMappable(norm=norm, cmap=COLORMAP)
