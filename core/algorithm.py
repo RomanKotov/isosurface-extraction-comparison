@@ -183,7 +183,7 @@ class AbstractAlgorithm(ABC):
         self._meta.mean_error = np.mean(np.abs(sdf_values))
         self._meta.max_error = np.max(np.abs(sdf_values))
         self._meta.rmse_error = np.sqrt(np.mean(sdf_values**2))
-        self._add_history_item("Scaled result", mesh.vertices, mesh.faces)
+        self._add_history_item("result", mesh.vertices, mesh.faces)
 
     def _add_history_item(self, title: str, vertices: Array3D, faces: Array3D):
         mesh = trimesh.Trimesh(
@@ -231,7 +231,6 @@ class FlexiCubes(AbstractAlgorithm):
             "method": options.get("method", "default"),
             "learning_rate": options.get("learning_rate", 0.05),
             "gradient_step": options.get("gradient_step", 1e-9),
-            "scale": options.get("scale", 1.0),
             "save_intermediate_results": options.get(
                 "save_intermediate_results", False
             ),
@@ -266,7 +265,6 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = self.construct_fc_grid(fc)
-        x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
         sdf = r_function.compute(x, y, z)
@@ -285,7 +283,6 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = self.construct_fc_grid(fc)
-        x_nx3 *= self.settings["scale"]
 
         x, y, z = x_nx3.split(1, dim=1)
         sdf = r.compute(x, y, z)
@@ -318,7 +315,6 @@ class FlexiCubes(AbstractAlgorithm):
 
         fc = FC(device)
         x_nx3, cube_fx8 = self.construct_fc_grid(fc)
-        x_nx3 *= self.settings["scale"]
 
         sdf = torch.rand_like(x_nx3[:, 0]) - 0.1
         sdf = torch.nn.Parameter(sdf.clone().detach(), requires_grad=True)
