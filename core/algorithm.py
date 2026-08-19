@@ -207,6 +207,7 @@ class MarchingCubes(AbstractAlgorithm):
             volume,
             level=0.0,
             spacing=tuple(self._grid.spacing),
+            gradient_direction="ascent",
             method=self.settings["method"],
             allow_degenerate=True
         )
@@ -328,6 +329,14 @@ class FlexiCubes(AbstractAlgorithm):
         deform = torch.nn.Parameter(
             torch.zeros_like(x_nx3), requires_grad=True
         )
+        deform_scale = torch.as_tensor(
+            self._grid.spacing,
+            dtype=x_nx3.dtype,
+            device=x_nx3.device,
+        )
+        grid_verts = (
+            x_nx3 + (1.0 - 5e-9) * deform_scale * torch.tanh(deform)
+        )
         grid_verts = x_nx3 + (2-1e-8) / (cells * 2) * torch.tanh(deform)
 
         vertices, faces, L_dev = fc(
@@ -369,8 +378,13 @@ class FlexiCubes(AbstractAlgorithm):
 
         for it in tqdm.tqdm(range(iterations)):
             optimizer.zero_grad()
+            deform_scale = torch.as_tensor(
+                self._grid.spacing,
+                dtype=x_nx3.dtype,
+                device=x_nx3.device,
+            )
             grid_verts = (
-                x_nx3 + (2 - 1e-8) / (cells * 2) * torch.tanh(deform)
+                x_nx3 + (1.0 - 5e-9) * deform_scale * torch.tanh(deform)
             )
             vertices, faces, L_dev = fc(
                 grid_verts,
