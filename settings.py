@@ -29,7 +29,7 @@ algorithm_flexicubes_gradient = (
 )
 
 algorithm_flexicubes_learn = (
-    "FlexiCubes, scalar field optimization (Adam + RMSE)",
+    "FlexiCubes, optimization",
     algorithm.FlexiCubes,
     {"method": "learn"}
 )

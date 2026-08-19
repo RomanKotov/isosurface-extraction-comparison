@@ -177,7 +177,7 @@ class AbstractAlgorithm(ABC):
         points, face_index = trimesh.sample.sample_surface(
             mesh, NUMBER_OF_TEST_SAMPLES
         )
-        sdf_values = r_function.compute(
+        sdf_values = r_function.phi(
             points[:, 0], points[:, 1], points[:, 2]
         )
         self._meta.mean_error = np.mean(np.abs(sdf_values))
@@ -219,7 +219,7 @@ class MarchingCubes(AbstractAlgorithm):
             for lo, hi in self._grid.bounds
         ]
         X, Y, Z = np.meshgrid(*axes, indexing="ij")
-        return r_function.compute(X, Y, Z)
+        return r_function.phi(X, Y, Z)
 
 
 class FlexiCubes(AbstractAlgorithm):
@@ -267,7 +267,7 @@ class FlexiCubes(AbstractAlgorithm):
         x_nx3, cube_fx8 = self.construct_fc_grid(fc)
 
         x, y, z = x_nx3.split(1, dim=1)
-        sdf = r_function.compute(x, y, z)
+        sdf = r_function.phi(x, y, z)
 
         vertices, faces, L_dev = fc(
             x_nx3,
@@ -285,15 +285,15 @@ class FlexiCubes(AbstractAlgorithm):
         x_nx3, cube_fx8 = self.construct_fc_grid(fc)
 
         x, y, z = x_nx3.split(1, dim=1)
-        sdf = r.compute(x, y, z)
+        sdf = r.phi(x, y, z)
 
         def grad_f(x3):
             h = self.settings["gradient_step"]
             x, y, z = x3.split(1, dim=1)
             dh = 2 * h
-            df_dx = (r.compute(x + h, y, z) - r.compute(x - h, y, z)) / dh
-            df_dy = (r.compute(x, y + h, z) - r.compute(x, y - h, z)) / dh
-            df_dz = (r.compute(x, y, z + h) - r.compute(x, y, z - h)) / dh
+            df_dx = (r.phi(x + h, y, z) - r.phi(x - h, y, z)) / dh
+            df_dy = (r.phi(x, y + h, z) - r.phi(x, y - h, z)) / dh
+            df_dz = (r.phi(x, y, z + h) - r.phi(x, y, z - h)) / dh
             result = torch.cat([df_dx, df_dy, df_dz], axis=1)
             return result
 
@@ -359,7 +359,7 @@ class FlexiCubes(AbstractAlgorithm):
 
         def res(xyz):
             x, y, z = xyz.split(1, dim=1)
-            return r_function.compute(x, y, z)
+            return r_function.phi(x, y, z)
 
         def sdf_diff(sdf, verts):
             target = res(verts.detach()).reshape(-1)

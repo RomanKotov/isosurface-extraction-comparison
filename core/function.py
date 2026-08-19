@@ -15,6 +15,8 @@ class FunctionInfo(TypedDict):
 
 
 class AbstractFunction(ABC):
+    inside_positive: bool = False
+
     @abstractmethod
     def compute(self, x: Array1D, y: Array1D, z: Array1D) -> Array1D:
         pass
@@ -23,8 +25,14 @@ class AbstractFunction(ABC):
     def to_dict(self) -> FunctionInfo:
         pass
 
+    def phi(self, x, y, z):
+        value = self.compute(x, y, z)
+        return -value if self.inside_positive else value
+
 
 class AbstractRFunction(AbstractFunction):
+    inside_positive = True
+
     def __str__(self) -> str:
         return json.dumps(self.to_dict(), indent=2)
 
@@ -278,6 +286,8 @@ class Arc(AbstractRFunction):
 
 
 class SDFSphere(AbstractFunction):
+    inside_positive = True
+
     def __init__(
             self,
             center: Point3D = (0, 0, 0),

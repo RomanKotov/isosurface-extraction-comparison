@@ -36,7 +36,7 @@ def visualize_side_by_side(
             data = mesh.vertices[mesh.faces]
             n_faces, n_items, n_cols = data.shape
             reshaped = np.array(mesh.triangles_center)
-            diff = algorithm.function.compute(
+            diff = algorithm.function.phi(
                 reshaped[:, 0], reshaped[:, 1], reshaped[:, 2]
             )
             diff_max = max(np.max(np.abs(diff)), diff_max)
