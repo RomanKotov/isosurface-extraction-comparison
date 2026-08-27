@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b46040ef-39c8-4344-9699-3d258a7b2559" name="Changes" comment="Add data files and configurations for isosurface extraction analysis">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article/01-vstup.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article_rules/Аннотація_Лісняк_Котов_Чопоров.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article_rules/Зразок_рукопису.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article_rules/Пример чек лист.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/1987_Lorensen_Marching Cubes - A High Resolution 3D Surface Construction Algorithm.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/1995_Pasko_Function Representation in Geometric Modeling.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2002_Ju_Dual Contouring of Hermite Data.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2003_Ohtake_Dynamic Mesh Optimization for Polygonized Implicit Surfaces with Sharp Features.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2004_Schaefer_Dual Marching Cubes - Primal Contouring of Dual Grids.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2007_Shapiro_Semi-analytic Geometry with R-Functions.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2012_Fayolle_Optimized Surface Discretization of Functionally Defined Multi-material Objects.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2013_Gasparini_Engineering Analysis in Imprecise Geometric Models.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2015_de Araujo_A Survey on Implicit Surface Polygonization.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2019_Mescheder_Occupancy Networks - Learning 3D Reconstruction in Function Space.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2019_Park_DeepSDF - Learning Continuous Signed Distance Functions for Shape Representation.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2021_Brunton_Displaced Signed Distance Fields for Additive Manufacturing.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2021_Chen_Neural Marching Cubes.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2021_Lechelek_Comparative Study of 3D Reconstruction Methods for Medical Imaging.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2021_Shen_Deep Marching Tetrahedra - A Hybrid Representation for High-Resolution 3D Shape Synthesis.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2022_Chen_Neural Dual Contouring.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2022_Sukumar_Exact Imposition of Boundary Conditions with Distance Functions in PINNs.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2022_Xie_Neural Fields in Visual Computing and Beyond.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2023_Balint_Operations on Signed Distance Function Estimates (preprint).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2023_Balint_Operations on Signed Distance Function Estimates.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2023_Lei_What's the Situation with Intelligent Mesh Generation - A Survey and Perspectives.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2023_Shen_Flexible Isosurface Extraction for Gradient-Based Mesh Optimization.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Chakkour_Finite Element Modelling of Complex 3D Image Data with Quantification and Analysis.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Dyken_Interactive Isosurface Visualization in Memory Constrained Environments.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Essakine_Where Do We Stand with Implicit Neural Representations.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Hwang_Occupancy-Based Dual Contouring.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Sun_Recent Advances in Implicit Representation-Based 3D Shape Generation.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Xu_InstantMesh - Efficient 3D Mesh Generation from a Single Image.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Zhao_FlexiDreamer - Single Image-to-3D Generation with FlexiCubes.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2024_Zou_The Generation of Tetrahedral Meshes for NURBS-Enhanced FEM.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/2025_He_SparseFlex - High-Resolution and Arbitrary-Topology 3D Shape Modeling.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/_duplicates/Comparative_Study_of_3D_Reconstruction_Methods_for.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/articles_pdf/_duplicates/s44267-024-00042-1 (1).pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/Untitled.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/errors-csg-mc-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/flexicubes-convergence.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/flexicubes-iterations.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/flexicubes-iterations.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/main-before-rebuild.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/model-marching-cubes.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/model-marching-cubes.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/normalised-primitives.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/pipelines-arch-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/pipelines-csg-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/pipelines-cube-16.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-csg-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-csg-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-energy-csg-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-energy-csg-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-energy-cube-16.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-energy-cube-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-pinned-csg-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-pinned-csg-32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-pinned-cube-16.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/polish-pinned-cube-16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/preview-arch.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/refine-comparison.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/refine-comparison.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/refine-fields-marching-cubes.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/refine-fields-mc-snap-projection.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-alpha.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-alpha.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-distribution.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-field.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-metrics.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-normal-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-slice.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32-surface-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-csg-resolutions.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-16-field.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-16.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-alpha.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-alpha.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-distribution.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-field.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-metrics.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-normal-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-slice.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32-surface-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-cube-hole-32.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-distribution.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-field.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-metrics.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-normal-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-slice.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16-surface-error.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/results/systems-sphere-16.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-align-iterative.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-align.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-base.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-full.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-refined.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/arch-smooth.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/class.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/csg-chain.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/csg-refined2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/csg-smooth-freeze.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/cube-pipeline.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/cube16-smooth.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/cube16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/distributions.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/panels.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/sphere-class.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/studio/state/view.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="138" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lisnayk&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:RomanKotov/isosurface-extraction-comparison.git&quot;,
+    &quot;accountId&quot;: &quot;34641947-a59e-45ed-b651-bc048f1c05e1&quot;
+  }
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3GUvkvkLzV6slrSQB7uJdIRjtbv" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.preview.executor": "Run",
+    "Python.run_section.executor": "Run",
+    "Python.view.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "article",
+    "junie.onboarding.icon.badge.shown": "true",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="pip install -r requirements.txt" />
+    </option>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-2653e85de345-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.31033.139" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b46040ef-39c8-4344-9699-3d258a7b2559" name="Changes" comment="" />
+      <created>1784039108435</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784039108435</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Add initial implementation for comparison of isosurface extraction methods, including preview and iteration sweeps with FlexiCubes">
+      <option name="closed" value="true" />
+      <created>1787424666724</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1787424666724</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add initial implementation: preview and iteration studies, IDE configs, and support files" />
+    <MESSAGE value="Add initial implementation for comparison of isosurface extraction methods, including preview and iteration sweeps with FlexiCubes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add initial implementation for comparison of isosurface extraction methods, including preview and iteration sweeps with FlexiCubes" />
+  </component>
+</project>
