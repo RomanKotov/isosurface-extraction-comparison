@@ -2,3 +2,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 .obsidian/
+article/config/style.csl
+article/output/*
+!article/output/.keep
