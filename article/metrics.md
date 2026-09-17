@@ -60,7 +60,7 @@ csl: config/style.csl
 
 
 ## Normal Consistency
-
+Порівняння відмінності нормалей у прогнозованої поверхні з еталонною. Наприклад, [@shenFlexibleIsosurfaceExtraction2023] зберігає нормаль для кожної з обраних точок, потім знаходить найближчого сусіда на еталонній поверхні обчислює кут між ними. Для порівняння зберігають відсоток точок, у яких відхилення більше за 5 градусів.
 - [@hwangOccupancyBasedDualContouring2024a]
 - [@shenFlexibleIsosurfaceExtraction2023] Також вмимірюється відсоток невірних нормалей (більше 5 градусів)
 - [@chenNeuralMarchingCubes2021]
