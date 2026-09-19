@@ -30,6 +30,7 @@ SOFT_BREAK = '\x00'
 
 _PATTERNS = (
     ('break', re.compile(r'<br\s*/?>', re.I)),
+    ('html_anchor', re.compile(r'<a\s+[^>]*>(?:</a>)?|<span\s+[^>]*>(?:</span>)?', re.I)),
     ('code', re.compile(r'`([^`]+)`')),
     ('math', re.compile(r'(?<!\$)\$(?!\$)(.+?)(?<!\\)\$(?!\$)', re.S)),
     ('bold', re.compile(r'\*\*(.+?)\*\*', re.S)),
@@ -67,6 +68,8 @@ def parse_inline(text: str, bold: bool = False, italic: bool = False) -> list[In
         _emit_text(result, text[position:match.start()], bold, italic)
         if kind == 'break':
             result.append(LineBreak())
+        elif kind == 'html_anchor':
+            pass
         elif kind == 'code':
             result.append(TextRun(_unescape(match.group(1)), bold=bold, italic=italic, code=True))
         elif kind == 'math':

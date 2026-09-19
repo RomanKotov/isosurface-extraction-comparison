@@ -1,14 +1,81 @@
-# Isosurface extraction comparison
+# Порівняльне дослідження методів ізоповерхневої екстракції для моделей на R-функціях у задачах препроцесингу МКЕ
 
-## Installation steps
-- Install python
-- Install dependencies `pip install -r requirements.txt` and `jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplotlib`
-- Launch jupyter-lab `jupyter lab` and open `main.ipynb` file there
+Науково-дослідний проєкт та академічний рукопис, присвячені дослідженню закономірностей просторової дискретизації неперервних тривимірних областей, аналітично заданих апаратом теорії R-функцій (функцій Рвачова), у трикутні полігональні поверхні для препроцесингу методу скінченних елементів (МКЕ).
 
-## Building the manuscript
-- Assemble `article/*.md` into a `.docx` laid out with the journal template:
-  `python tools/build_article.py` (see [tools/README.md](tools/README.md) for profiles and options)
+У роботі порівнюються прямий гратковий метод **Marching Cubes (MC)**, двоїсті методи **Dual Marching Cubes (DMC)** та **Dual Contouring (DC)**, а також варіаційний диференційовний метод **FlexiCubes (FC)** за критеріями топологічної герметичності (watertight), відсутності вироджених sliver-елементів ($\alpha_{\min} \ge 10^\circ$), точності локалізації гострих ребер та часової складності.
 
-## Useful commands
-- Install export plugin: `poetry self add poetry-plugin-export`
-- Export dependencies into requirements.txt: `poetry export --without-hashes --format requirements.txt --with dev --output requirements.txt`
+---
+
+## Структура репозиторію
+
+- **`article/`** — рукопис статті за міжнародною структурою **IMRaD**:
+  - `01-abstract.md` — титульні дані, двомовні метадані (укр./англ.), структуровані анотації, ключові слова.
+  - `02-introduction.md` — вступ, актуальність (САПР/МКЕ, NASA Vision 2030), порівняння SDF та R-функцій, критичний огляд літератури, постановка проблеми, мета та 3 задачі.
+  - `03-materials-and-methods.md` — об'єкт, гіпотеза, системи R-функцій ($R_0, R_\alpha, R_p, R_{m0}, \min/\max$), тестові CSG-моделі, алгоритми екстракції, конвеєри постобробки, Таблиці 1 та 2 критеріїв якості для МКЕ.
+  - `04-results.md` — сухі емпіричні результати: порівняння екстракторів (Таблиця 3, Рис. 1), оптимізація FlexiCubes (Таблиця 4, Рис. 2), ефективність конвеєрів (Таблиця 5), вплив систем R-функцій (Таблиця 6, Рис. 3).
+  - `05-discussion.md` — геометро-фізична інтерпретація стабільності DMC та деградації DC, зіставлення з аналогами, рекомендації для САПР, обмеження, 3 симетричні висновки, декларації (CRediT), відомості про авторів.
+  - `06-references.md` — єдиний список 29 рецензованих джерел з DOI та реєстр верифікації за первинними PDF.
+  - `assets/` — ілюстрації, графіки та рендери полігональних поверхонь.
+  - `archive_7sections/` — архів попередньої 10-файлової версії рукопису.
+  - `README.md` — детальний посібник із роботи зі статтею.
+- **`articles_pdf/`** — фізичні PDF-файли першоджерел світової наукової періодики (ACM TOG, IEEE CVPR, CMAME, CAD тощо), що гарантують сувору верифікацію бібліографії без галюцинацій.
+- **`article_tepmlate/`** — офіційний видавничий шаблон Springer Nature (`Author.dotm`), інструкції оформлення та набори видавничих стилів.
+- **`results/`** — числові результати обчислювальних експериментів у форматі CSV (`systems-*.csv`, `pipelines-*.csv`), криві збіжності та метрики якості.
+- **`tools/`** — скрипти автоматизованого складання рукопису:
+  - `tools/build_article.py` — автономний збирач markdown-розділів у стилізований docx або LaTeX.
+  - `tools/article_builder/` — ядро парсингу, трансляції формул в OMML (Office MathML) та верстки.
+- **`RULES.md`** — змістовний академічний регламент (безособовий стиль, термінологія sliver, симетрія задач і висновків).
+- **`RULES-SPRINGER.md`** — правила структурної розмітки за шаблоном Springer Nature Word Template.
+
+---
+
+## Встановлення та запуск
+
+### 1. Клонування та налаштування оточення
+
+```bash
+# Встановлення залежностей через Poetry:
+poetry install --with article,dev
+
+# Або через pip:
+pip install -r requirements.txt
+```
+
+### 2. Запуск дослідницьких обчислень та візуалізації
+
+```bash
+# Запуск Jupyter Lab для інтерактивних експериментів:
+jupyter lab
+# Відкрити ноутбук main.ipynb для відтворення серій обчислень
+```
+
+### 3. Складання рукопису статті
+
+Скрипт автоматично підтягує розділи з `article/` і накладає видавничі стилі Springer Nature:
+
+```bash
+# Повний рукопис для подання:
+python tools/build_article.py                          # -> build/manuscript.docx
+
+# Перегляд усіх доступних профілів:
+python tools/build_article.py --list
+
+# Варіант для сліпого рецензування (без метаданих авторів):
+python tools/build_article.py -p blind
+
+# Генерація у формат LaTeX:
+python tools/build_article.py -f tex                   # -> build/manuscript.tex
+```
+
+---
+
+## Корисні команди розробника
+
+- Експорт залежностей:
+  ```bash
+  poetry export --without-hashes --format requirements.txt --with dev,article --output requirements.txt
+  ```
+- Перевірка цілісності цитувань та академічного стилю:
+  ```bash
+  python scratch/verify_imrad.py
+  ```

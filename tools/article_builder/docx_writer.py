@@ -165,6 +165,9 @@ class ArticleWriter:
             self._pending_authors = True
             return
 
+        if self._front_matter and self._pending_abstract:
+            return
+
         runs = heading.runs
         if self.styleset.strip_heading_numbers:
             runs = _strip_leading_number(runs)

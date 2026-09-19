@@ -5,67 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b46040ef-39c8-4344-9699-3d258a7b2559" name="Changes" comment="Add data files and configurations for isosurface extraction analysis">
-      <change afterPath="$PROJECT_DIR$/.idea/isosurface-extraction-comparison.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/AGENTS.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CLAUDE.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/GEMINI.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RULES-SPRINGER.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RULES.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article-build.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/00-titul-anotatsiya.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/02-ohlyad.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/03-meta-zadachi.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/04-materialy-metody.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/05-rezultaty.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/06-obgovorennya.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/07-vysnovky.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/08-literatura.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/09-vidomosti-pro-avtoriv.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/flexicubes-convergence.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/preview-arch.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/systems-csg-32-normal-error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/systems-csg-32-surface-error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/systems-cube-hole-32-distribution.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/systems-cube-hole-32-normal-error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/assets/systems-cube-hole-32-surface-error.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/manuscript.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article/manuscript_full.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/literature-reivew.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/metrics_chakkour2024.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/metrics_ndc2022.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/metrics_shen2023.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/metrics_zou2024.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/Аннотація_Лісняк_Котов_Чопоров.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/Зразок_рукопису.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/extracted/Пример чек лист.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_rules/literature-reivew.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_tepmlate/Author.dotm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_tepmlate/Instructions_SpringerNature_Word_Template.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/article_tepmlate/Word Template_Instruction _укр.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/notes/2022_Sukumar_ukr.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scratch/_refs.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scratch/test_math.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scratch/test_template_clear.docx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/builder.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/docx_writer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/inline.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/latex_writer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/mdparse.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/omml.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/semantics.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/article_builder/template.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tools/build_article.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article/02-introduction.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article/04-results.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article/05-discussion.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/article/01-vstup.md" beforeDir="false" afterPath="$PROJECT_DIR$/article/01-vstup.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article-build.toml" beforeDir="false" afterPath="$PROJECT_DIR$/article-build.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/00-titul-anotatsiya.md" beforeDir="false" afterPath="$PROJECT_DIR$/article/01-abstract.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/01-vstup.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/02-ohlyad.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/03-meta-zadachi.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/04-materialy-metody.md" beforeDir="false" afterPath="$PROJECT_DIR$/article/03-materials-and-methods.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/05-rezultaty.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/06-obgovorennya.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/07-vysnovky.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/08-literatura.md" beforeDir="false" afterPath="$PROJECT_DIR$/article/06-references.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/09-vidomosti-pro-avtoriv.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/article/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/manuscript.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/article/manuscript_full.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/article_builder/docx_writer.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/article_builder/docx_writer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/article_builder/inline.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/article_builder/inline.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/article_builder/mdparse.py" beforeDir="false" afterPath="$PROJECT_DIR$/tools/article_builder/mdparse.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,7 +119,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787424666724</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add data files and configurations for isosurface extraction analysis">
+      <option name="closed" value="true" />
+      <created>1789842103732</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1789842103732</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -187,6 +156,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add initial implementation: preview and iteration studies, IDE configs, and support files" />
     <MESSAGE value="Add initial implementation for comparison of isosurface extraction methods, including preview and iteration sweeps with FlexiCubes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add initial implementation for comparison of isosurface extraction methods, including preview and iteration sweeps with FlexiCubes" />
+    <MESSAGE value="Add data files and configurations for isosurface extraction analysis" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add data files and configurations for isosurface extraction analysis" />
   </component>
 </project>

@@ -136,16 +136,12 @@ landscape_wide_tables = true
 description = "Повний рукопис для подання до редакції"
 output = "manuscript.docx"
 sections = [
-    "00-titul-anotatsiya.md",
-    "01-vstup.md",
-    "02-ohlyad.md",
-    "03-meta-zadachi.md",
-    "04-materialy-metody.md",
-    "05-rezultaty.md",
-    "06-obgovorennya.md",
-    "07-vysnovky.md",
-    "08-literatura.md",
-    "09-vidomosti-pro-avtoriv.md",
+    "01-abstract.md",
+    "02-introduction.md",
+    "03-materials-and-methods.md",
+    "04-results.md",
+    "05-discussion.md",
+    "06-references.md",
 ]
 
 [profiles.full.metadata]
@@ -165,28 +161,25 @@ drop_sections = [
     "^Подяка",
 ]
 sections = [
-    "01-vstup.md",
-    "02-ohlyad.md",
-    "03-meta-zadachi.md",
-    "04-materialy-metody.md",
-    "05-rezultaty.md",
-    "06-obgovorennya.md",
-    "07-vysnovky.md",
-    "08-literatura.md",
+    "02-introduction.md",
+    "03-materials-and-methods.md",
+    "04-results.md",
+    "05-discussion.md",
+    "06-references.md",
 ]
 
 # Окремий файл анотацій — редакція часто вимагає його окремо.
 [profiles.abstract]
 description = "Лише титул, резюме та ключові слова"
 output = "abstract.docx"
-sections = ["00-titul-anotatsiya.md"]
+sections = ["01-abstract.md"]
 
 # Тільки експериментальна частина — зручно для внутрішнього обговорення.
 [profiles.results]
 description = "Методи, результати та обговорення"
 output = "results.docx"
-sections = ["04-materialy-metody.md", "05-rezultaty.md", "06-obgovorennya.md"]
-page_break_before = ["05-rezultaty.md"]
+sections = ["03-materials-and-methods.md", "04-results.md", "05-discussion.md"]
+page_break_before = ["04-results.md"]
 
 # Текстовий варіант для вичитки: без ілюстрацій, з полуторним інтервалом.
 [profiles.proofread]
@@ -194,16 +187,12 @@ description = "Варіант для вичитки: без рисунків, п
 output = "manuscript-proofread.docx"
 include_figures = false
 sections = [
-    "00-titul-anotatsiya.md",
-    "01-vstup.md",
-    "02-ohlyad.md",
-    "03-meta-zadachi.md",
-    "04-materialy-metody.md",
-    "05-rezultaty.md",
-    "06-obgovorennya.md",
-    "07-vysnovky.md",
-    "08-literatura.md",
-    "09-vidomosti-pro-avtoriv.md",
+    "01-abstract.md",
+    "02-introduction.md",
+    "03-materials-and-methods.md",
+    "04-results.md",
+    "05-discussion.md",
+    "06-references.md",
 ]
 
 [profiles.proofread.style]

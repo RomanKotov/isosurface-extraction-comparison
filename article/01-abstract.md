@@ -1,8 +1,3 @@
-<!-- Профіль journal (7-розділова схема). Вимоги: article_rules/Зразок_рукопису.docx
-     Титульна частина рукопису:
-     УДК, назва (орієнтована на результат), автори, резюме (1800–1900 знаків із пробілами),
-     ключові слова (рівно 10 слів). -->
-
 **УДК 004.92:519.6**
 
 # Полігонізація геометричних моделей, заданих R-функціями, методом FlexiCubes
@@ -32,5 +27,3 @@ Department of Software Engineering, Faculty of Mathematics, Zaporizhzhia Nationa
 *The object of the study is the spatial discretization of continuous three-dimensional domains analytically defined using the R-functions framework into triangular surface meshes intended for finite element method (FEM) preprocessing. One of the most critical challenges in preparing engineering analysis models is mesh quality degradation, manifested by the formation of degenerate triangular elements (slivers) with planar angles below 10°, topological non-manifold defects, and the distortion of sharp feature creases and stress concentration zones. This paper establishes fundamental regularities of surface mesh generation when applying the primal Marching Cubes (MC) algorithm, dual schemes including Dual Marching Cubes (DMC) and Dual Contouring (DC), and the variational FlexiCubes (FC) method. It was determined that the classical MC algorithm generates between 4.08% and 9.74% degenerate sliver triangles with minimal angles below 0.5°, leading to severe ill-conditioning of the global FEM stiffness matrix. In contrast, DMC utilizes centroid positioning of vertices within internal primal polygons, guaranteeing a stable minimum planar angle between 14.03° and 15.66°, a strictly zero fraction of sliver elements (0.00%), and complete topological watertightness. The DC algorithm is found to experience severe numerical degradation on high-order R-function fields due to the ill-conditioning of the QEF functional (surface error reaching 4.285 cells, sliver fraction rising to 24.01%). The variational FlexiCubes method combined with optimization reduces surface residual by a factor of 2.1 (down to 0.086 cells), while proposed multi-stage post-processing pipelines achieve angles exceeding 21.37° in only 0.168 s. The obtained results can be directly applied in automated CAD/CAE preprocessors.*
 
 **Keywords**: R-functions, implicit surface modeling, isosurface extraction, Marching Cubes, Dual Contouring, Dual Marching Cubes, FlexiCubes, mesh quality control, finite element method, sliver elements.
-
----
