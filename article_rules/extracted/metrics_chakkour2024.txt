@@ -1,0 +1,261 @@
+--- PAGE 4 ---
+strongly anisotropic material. Its local fiber orientation field 
+needs to be determined, and ellipses could approximate them. 
+These orientation angles are required for the analytical homoge-
+nization approaches, which are used to compute the material 
+properties of a tow as mentioned in [68]. These angles are also 
+used in FE modeling for others types of material microstructure.
+Multiple material marching cubes 
+algorithm (M3C)
+This section addresses a strategy routine based on the MC algo-
+rithm to reconstruct multi-material and smoothed surfaces from 
+any given image. For this, we begin this section by briefly evaluat-
+ing some meshing software. Indeed, there exist commercial soft-
+wares providing numerical results for processing of multiply 
+materials images. Some of these softwares like Avizo, 
+BioMesh3D, Cleaver, and MeshLab, have a good interface design 
+for data visualization. For instance, Avizo [69] is able to generate 
+an initial surface mesh, which is based on the general marching 
+cubes algorithm (M3C). However, making smaller meshes with it 
+means that stage optimization is difficult. BioMesh3D [70] is a 
+meshing tool for 3D image data quantification and analysis that 
+is developed for medical applications. Its disadvantage is its slow 
+efficiency, since it generates too many nodes at some particular 
+zones. MeshLab [71] is well-known software for image-based 
+meshing with the best visualization purposes. After this brief re-
+view, our original investigation develops the construction of a 
+simple interface mesh with an adequate number of nodes. This 
+interface is smoothly meshed, with a refinement procedure after 
+completing the image preparation step.
+Among the MC modifications shown in Figs 3 and 4, our 
+framework is based on the existing algorithm [58]. For instance, 
+the surface topologies of the improved algorithm are consistently 
+expanded in [72] to polyhedral volume topologies. The original al-
+gorithm lookup table (LUT) is not used due to the large size. The 
+eight vertices can have up to eight different label materials in a 
+multi-material cube. Each label designs the material ID and is 
+given in the form of a status value. Then, there are 88 or 16 777 
+216 possible combinations for generating all cells. If all possible 
+triangles are taken into account, then the drive’s capacity is dis-
+played as 1.2 GB (gigabytes). This quantity means expensive 
+computation related to this significant operation. For this reason, 
+the LUT algorithm is improved.
+The developed volumetric tetrahedral meshing is structured 
+into five stages. The first one is to prepare the input image, and 
+this is optional. It consists of removing small regions and fixing 
+diagonally connected voxels. Next, the initial surface is created 
+using modifications of the multiple material marching cubes al-
+gorithm [58]. The third stage is the preliminary remeshing step. It 
+includes extracting boundary edges from the obtained initial sur-
+face in order to be smoothed. Then, the fourth step consists of 
+creating the half-edge data structure to follow the remeshing 
+process. The smoothed surface is remeshed with fixed boundary 
+edge nodes during this stage. Finally, TetGen [73] is used and ap-
+plied to previous surface mesh, providing the resulting tetrahe-
+dral mesh. It is important to use this software to generate good 
+quality mesh suitable for our FE Models. Figure 5 summarizes the 
+main workflow, including these different steps. Note that it is dif-
+ficult to show visually the 3D volumic presentation. However,  
+Fig. 5A–D depict its surface presentation at each stage, in which 
+the volume is subdivided into a number of tetrahedral cells. The 
+fourth and final stages are presented in only one diagram Fig. 5D. 
+The surface mesh presented in Fig. 5C seems to be more refined 
+compared to the one presented in Fig. 5D. However, the volumic 
+cell number presented in Fig. 5D is much higher than its pre-
+sented in Fig. 5C. This superiority is explained by the impact of 
+the mesh generator TetGen at the final step.
+The FE model is based on the tetrahedral mesh that could be 
+differentiated from the corresponding voxel-mesh model result. 
+The voxel representation of geometry is ambiguous, involving an 
+incorrect topology. Additionally, the FE approximation can pro-
+duce an oscillation at the interface region when using the voxel 
+mesh model. The main disadvantage of this representation is 
+that a low noise level appears during the segmentation step. 
+Other disadvantages are the diagonal voxel connectivity prob-
+lems and extensive computation resources. In particular, the tet-
+rahedral mesh quality is better than the voxel mesh. Our choice 
+is motivated by the geometry accuracy and the mechanical preci-
+sion framework. This framework manages the local orientations 
+well and is suitable for the numerical homogenization results.
+We now discuss the initial step devoted to manipulating some 
+functionalities for image processing. It is aimed at analyzing 
+Figure 2. Voxel-mesh model of the textile composites with carbon fiber, accompanied by its 2D slice in XY plane obtained by l-Computed tomography.
+4 | Oxford Open Materials Science, 2024, Vol. 4, No. 1  
+Downloaded from academic.oup.com/ooms/article/4/1/itae003/7608314 by Zaporizhzhia National University user on 24 August 2026
+
+
+--- PAGE 5 ---
+images with corrected transformation. During the image prepa-
+ration step, some different options could be used. In this step, the 
+small region can be removed. The small grains removal option 
+consists of removing small disconnected or diagonally connected 
+islands (smaller than a given number of voxels) to prevent small 
+artificial isolated surfaces. This removal cannot fix critical 
+Figure 3. The basic topological configurations of marching cubes algorithm (MC).
+Figure 4. The expanded topology configuration of marching cubes algorithm (M3C).
+Chakkour | 5  
+Downloaded from academic.oup.com/ooms/article/4/1/itae003/7608314 by Zaporizhzhia National University user on 24 August 2026
+
+
+--- PAGE 6 ---
+connectivity in cases of grain with a hole. Additionally, the con-
+nected voxels could be fixed diagonally. This means that ele-
+ments up to a squared distance of connectivity from the center 
+are considered neighbors. In some cases, it means that voxels 
+with a common edge or vertex are in the same grain. Figure 6 
+illustrates semantic of the small grain removal and critical voxel 
+connectivity problems.
+A tetrahedral element possesses six dihedral angles, where 
+each angle is associated with an edge that constitutes it. It is de-
+fined as the angle between two faces incident on it. Assume that 
+each tetrahedron abcd has vertices a, b, c, and d, with the follow-
+ing lengths, u¼ b−a; v¼ c−a, and w¼ d−a. It is easy to see that 
+the dihedral angle h at edge ab is the angle between these two 
+normals, given by the inverse cotangent formula, 
+h¼ cot−1 ðu:uÞðv:wÞ −ðu:vÞ:ðu:wÞffiffiffiffiffiffiffiu:up ½u; v; w�
+ !
+; (2) 
+in which ½u; v; w� means the scalar triple product operator of vec-
+tors u, v, and w. It could be minimized or maximized to deter-
+mine its extrema. In the following, let the total set of points be 
+partitioned into two groups. The first is the fixed points Pfix, and 
+the second is the movable points Pmov. Recall that the original 
+version of the Laplacian algorithm consists of replacing the posi-
+tion pi of point i with the average of the locations of adjacent 
+points, as shown in Fig. 7. Formally, we have the following for 
+every new position: 
+pi¼
+qi; i2 Pfix
+1
+jadjðiÞj
+X
+j2adjðiÞ
+qj; i2 Pmov
+:
+8
+>><
+>>:
+(3) 
+There are two approaches or techniques to compute new posi-
+tions pi of any vertex i. The first situation is to change all posi-
+tions q by p in only one step. This technique supposes that the 
+vertices obtained in each step from algorithm iteration are the 
+same. Then, the new position pi is entirely the set of positions, 
+namely q. Adj(i) denotes the set of adjacent vertices of one vertex 
+i. Normally, the new position pi depends on the positions of its 
+adjacent vertices j2 AdjðiÞ. The convention of fixed point states 
+that if AdjðiÞ¼;, then i2 Pfix. After iteration of the algorithm, the 
+previous points qi go towards the new positions pi, which are pro-
+duced by the Laplacian algorithm. The second situation occurs 
+when the new points are modified compared to current points qi. 
+We say that vertices were moveable while the topology of the 
+mesh remains unchanged. Then, the vertex’s location in the FE 
+A B
+C D
+Figure 5. The volumetric tetrahedral mesher process on a given grain.
+Figure 6. Small grains removal and critical voxel connectivity problems.
+6 | Oxford Open Materials Science, 2024, Vol. 4, No. 1  
+Downloaded from academic.oup.com/ooms/article/4/1/itae003/7608314 by Zaporizhzhia National University user on 24 August 2026
+
+
+--- PAGE 7 ---
+mesh is corrected by computing a new position as the average of 
+the locations of vertices in the neighborhood on the mesh.
+Here, the basic idea of the smoothing method predefined pre-
+viously as the third stage is justified as follows. We have applied 
+the smoothing technique based on the Laplacian smoothing ap-
+proach. This approach, described in [74, 75] is defined as smooth-
+ing unstructured vertex sets. It is considered a new way to 
+reconstruct a new surface mesh with high performance. The ef-
+fect is to correct the location of vertices searching for further to-
+pological correction. Insisting here that a considerable effort is 
+made to control minimum dihedral angles during this procedure 
+for the non-manifold surface. Liang et al. [76] described the 
+advantages of applying this technique to dihedral angles to ame-
+liorate the degree of smoothness in quality.
+Note that B-splines are a class of polynomial pieces with a 
+particular connection between vertices that are used to create 
+smooth curves. These functions could be first degree, second de-
+gree, or higher, and overlap with each neighbor. In the current 
+work, weighted B-splines are used to guarantee the smoothness, 
+particularly concerning multi-materials edges. In the same con-
+text, related works [77–79] are briefly reviewed. It is comfortable 
+to use B-splines from an existing Python library named scipy.in-
+terpolate. The splrep function allows specific determination of 
+the B-spline representation to define the control coefficients. It is 
+aimed at developing representation for spline curves by con-
+structing curves that interpolate these points. The first example 
+is subjected to all the microstructure, in which B-rep of degree 3 
+is used to represent it geometrically. Figure 8 illustrates the use 
+of an accurate B-spline based on the initial surface with the pro-
+posed modified criteria of our algorithm. This explains the dis-
+placement of the initial edges over resulting curves. The final 
+diagram suggests the superposition of both these surfaces. This 
+smoothing problem is solved by using three iterations to improve 
+weights, prevent self-intersections, and compare their trajectory.
+Meshing robustness in some material types
+In this section, we investigate the reactions of some parameters 
+involved in the M3C algorithm on the mesh information. Two 
+materials are studied: composite and polycrystalline. This inves-
+tigation is classified into two groups. The first one occurs while 
+generating the initial surface mesh. The second one takes place 
+during remeshing process, and it is aimed at knowing how the 
+resulting surface is sufficiently smoothed by modifying each pa-
+rameter. The mesh size panel characterizing the mesh quality is 
+described by specifying information concerning cells. Then, the 
+number of faces, edges, and corner nodes is reported in each 
+studied case.
+The first test consists of removing only small regions, espe-
+cially those with 100 voxels or fiewer forming the input image. It 
+is presented in Table 1, performing the generated mesh by 0.2% 
+for both material types in quality. This option is advocated for af-
+fecting accuracy in mesh size.
+The next test examines fixing diagonal connectivities of voxels 
+while reading the input image. This test is illustrated in Table 2, 
+demonstrating that this parameter does not influence mesh re-
+finement, consequently providing the same quality mesh.
+In what follows, the objective is to successively remove small 
+regions from a given 3D image. This is done by progressively re-
+moving 64, 128, and 1000 voxels in each case, as presented in  
+Table 3. Removing the same voxel number affects the polycrys-
+talline material much more than the composite material. It is 
+justifiable to delete some voxels by utilizing this option for 
+modelling polycrystalline microstructure with high accuracy 
+during the image preparation step.
+The contribution concerning the connectivity paradox for 
+solving the problem of edges and surfaces is presented. This solu-
+tion is considered novel for conserving the morphological proper-
+ties of the structure when it is applied. Connectivity controls 
+cells that are part of the structure. It ranges from 1 to 3, which is 
+the default value. This value means that voxels with a shared 
+edge or vertex are in the same phase. It allows for the improve-
+ment of mesh quality in the smoothing process. This study is de-
+tailed in Table 4.
+It is feasible to bring correction to the surface topology if criti-
+cal connectivity is not fixed or not regular. If this option is acti-
+vated with a true Boolean value, the obtained mesh gets the 
+same surface and edge nodes for both material microstructures, 
+although, the corner nodes differ in small numbers. This varia-
+tion is explained by the fact that new points belonging to the cell 
+center are appended to some facets. The resulting test is summa-
+rized in Table 5.
+The smoothing operation is performed during the remeshing 
+steps. If the iteration number is assumed to be large, then the 
+generated mesh enlarges significantly, as shown in Fig. 9. The fol-
+lowing operation is the implicit fairing approach [80]. This ap-
+proach is based on Laplace smoothing, which can be regulated 
+and ranges from 0 to 1. It is adopted for naturally controlling the 
+volume of a small component in the region of the element. If this 
+parameter takes a value near from 0 or 1, the mesh quality is im-
+proved for composite material. However, the meshing process of 
+polycrystalline material appears to be dissimilar. This evoked 
+test is illustrated in Table 6 and is clarified as follows. When in-
+creasing this coefficient, the number of nodes and cells declines, 
+consequently degrading mesh element quality.
+Some parameters, such as distance and angle, affect mesh 
+quality. The first one is utilized for the moving distance 
+Figure 7. The Laplacian algorithm.
+Chakkour | 7  
+Downloaded from academic.oup.com/ooms/article/4/1/itae003/7608314 by Zaporizhzhia National University user on 24 August 2026
+
+

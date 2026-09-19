@@ -1,0 +1,239 @@
+# Конфігурація складальника рукопису: python tools/build_article.py --list
+#
+# [build]     — де брати розділи, шаблон та куди класти docx
+# [style]     — типографіка для наборів стилів, які створюють власні стилі
+# [stylesets] — як елементи рукопису лягають на стилі конкретного шаблону
+# [profiles]  — набори розділів: різні варіанти складання одного й того самого тексту
+
+[build]
+source_dir = "article"
+assets_dir = "article"                              # базовий шлях для ![](assets/...)
+output_dir = "build"
+styleset = "springer"                               # набір стилів за замовчуванням
+template = "article_rules/Зразок_рукопису.docx"     # запасний шаблон, якщо набір його не задає
+# math_xsl = "C:/Program Files/Microsoft Office/root/Office16/MML2OMML.XSL"
+
+# Службові блоки, що не йдуть до редакції: від збігу до наступного заголовка
+# відповідного або вищого рівня (regexp по тексту блоку).
+drop_sections = [
+    "^Джерела розділу",
+    "^Верифікація джерел",
+]
+
+[style]
+font = "Times New Roman"
+size_pt = 14.0
+line_spacing = 1.15
+space_after_pt = 0.0
+first_line_indent_cm = 1.25
+justify = true
+lang = "uk-UA"
+heading_space_before_pt = 12.0
+heading_space_after_pt = 6.0
+caption_size_pt = 13.0
+table_font_size_pt = 12.0
+table_min_font_size_pt = 8.0
+table_max_width_cm = 16.0        # широкі таблиці можуть виходити в поля сторінки
+figure_max_width_cm = 16.0
+bullet_marker = "–"
+
+# --------------------------------------------------------------------------
+# LaTeX: другий вихід із того самого markdown (build_article.py -f tex|both)
+# --------------------------------------------------------------------------
+# Типографіка (кегль, інтерліньяж, абзацний відступ) береться з [style], щоб
+# docx і tex не розходилися. Формат подання до редакції — docx за шаблоном
+# Springer Nature; .tex потрібен для PDF-вичитки, препринту та майбутнього
+# англомовного варіанта. Ролі елементів рукопису тут лягають на макроси
+# преамбули так само, як у docx вони лягають на стилі шаблону.
+
+[latex]
+documentclass = "article"
+class_options = ["12pt", "a4paper"]
+engine = "xelatex"                  # xelatex/lualatex: fontspec+polyglossia; pdflatex: T2A+babel
+language = "ukrainian"
+other_language = "english"
+main_font = "Times New Roman"       # лише для xelatex/lualatex
+mono_font = "Courier New"
+geometry = "a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=2cm"
+packages = []                       # додаткові пакети: лише імена, без \usepackage
+preamble = ""                       # довільний хвіст преамбули (класи видавців, макроси)
+define_macros = true                # згенерувати визначення макросів для ролей елементів
+number_headings = false             # нумерація розділів уже є в тексті markdown
+number_equations = true
+number_captions = false             # підписи вже містять «Рис. 1.» / «Таблиця 1»
+figure_placement = "htbp"
+figure_width = '0.9\linewidth'
+table_placement = "htbp"
+wide_table_columns = 6              # більше стовпців — окрема альбомна сторінка
+wide_table_resize = true            # і масштабування під висоту сторінки
+code_environment = "verbatim"
+bibliography = "thebibliography"    # thebibliography | plain (нумерований список абзацами)
+
+# Ролі елементів рукопису -> макроси преамбули (аналог [stylesets.*.styles]).
+[latex.macros]
+title       = "arttitle"
+authors     = "artauthors"
+affiliation = "artaffil"
+udc         = "artudc"
+abstract    = "artabstract"
+keywords    = "artkeywords"
+
+# --------------------------------------------------------------------------
+# Набори стилів
+# --------------------------------------------------------------------------
+
+# Офіційний шаблон Springer Nature: усе оформлення береться зі стилів шаблону,
+# складальник нічого не форматує вручну (вимога інструкції видавця).
+[stylesets.springer]
+description = "Springer Nature Word Template (структурна розмітка стилями)"
+template = "article_tepmlate/Author.dotm"
+create_styles = false          # не створювати власних стилів — тільки стилі шаблону
+manual_formatting = false      # не задавати шрифти/кеглі на рівні тексту
+strip_heading_numbers = false
+equation_tab = true            # стиль equation центрує формулу по табуляції
+landscape_wide_tables = true   # широкі таблиці — на власну альбомну сторінку
+reference_tab = true           # числовий стиль цитування: «1» + табуляція + запис
+table_style = "Table Grid"
+
+# Ненумеровані заголовки: нумерація розділів (1..7, 5.1, ...) вже є в тексті.
+# Щоб віддати нумерацію шаблону, поставте heading1..4 = "heading1".."heading4"
+# і strip_heading_numbers = true.
+[stylesets.springer.styles]
+title              = "Main_Title"
+authors            = "author"
+affiliation        = "affiliation"
+udc                = "noindentpara"
+abstract           = "abstract"
+keywords           = "keyword"
+heading1           = "unheading1"
+heading2           = "unheading2"
+heading3           = "unheading3"
+heading4           = "unheading4"
+body               = "para"
+body_after_heading = "noindentpara"   # перший абзац після заголовка — без відступу
+equation           = "equation"
+figure             = "noindentpara"
+figure_caption     = "figure"
+table_caption      = "tablelegend"
+table_cell         = "table"
+list               = "para"
+reference          = "reference"
+references_heading = "references"
+code               = "computercode"
+
+# Попередній шаблон редакції: складальник сам створює стилі «Article *».
+[stylesets.journal]
+description = "Зразок рукопису редакції (власні стилі складальника)"
+template = "article_rules/Зразок_рукопису.docx"
+create_styles = true
+landscape_wide_tables = true
+
+# --------------------------------------------------------------------------
+# Профілі складання
+# --------------------------------------------------------------------------
+
+[profiles.full]
+description = "Повний рукопис для подання до редакції"
+output = "manuscript.docx"
+sections = [
+    "00-titul-anotatsiya.md",
+    "01-vstup.md",
+    "02-ohlyad.md",
+    "03-meta-zadachi.md",
+    "04-materialy-metody.md",
+    "05-rezultaty.md",
+    "06-obgovorennya.md",
+    "07-vysnovky.md",
+    "08-literatura.md",
+    "09-vidomosti-pro-avtoriv.md",
+]
+
+[profiles.full.metadata]
+title = "Полігонізація геометричних моделей, заданих R-функціями, методом FlexiCubes"
+author = "А. Б. Лісняк, Р. О. Котов, С. В. Чопоров"
+language = "uk-UA"
+
+# Текст без титулу та анотацій — для сліпого рецензування.
+[profiles.blind]
+description = "Анонімізований варіант (без титулу та відомостей про авторів)"
+output = "manuscript-blind.docx"
+drop_sections = [
+    "^Джерела розділу",
+    "^Верифікація джерел",
+    "^Внесок авторів",
+    "^Відомості про авторів",
+    "^Подяка",
+]
+sections = [
+    "01-vstup.md",
+    "02-ohlyad.md",
+    "03-meta-zadachi.md",
+    "04-materialy-metody.md",
+    "05-rezultaty.md",
+    "06-obgovorennya.md",
+    "07-vysnovky.md",
+    "08-literatura.md",
+]
+
+# Окремий файл анотацій — редакція часто вимагає його окремо.
+[profiles.abstract]
+description = "Лише титул, резюме та ключові слова"
+output = "abstract.docx"
+sections = ["00-titul-anotatsiya.md"]
+
+# Тільки експериментальна частина — зручно для внутрішнього обговорення.
+[profiles.results]
+description = "Методи, результати та обговорення"
+output = "results.docx"
+sections = ["04-materialy-metody.md", "05-rezultaty.md", "06-obgovorennya.md"]
+page_break_before = ["05-rezultaty.md"]
+
+# Текстовий варіант для вичитки: без ілюстрацій, з полуторним інтервалом.
+[profiles.proofread]
+description = "Варіант для вичитки: без рисунків, полуторний інтервал"
+output = "manuscript-proofread.docx"
+include_figures = false
+sections = [
+    "00-titul-anotatsiya.md",
+    "01-vstup.md",
+    "02-ohlyad.md",
+    "03-meta-zadachi.md",
+    "04-materialy-metody.md",
+    "05-rezultaty.md",
+    "06-obgovorennya.md",
+    "07-vysnovky.md",
+    "08-literatura.md",
+    "09-vidomosti-pro-avtoriv.md",
+]
+
+[profiles.proofread.style]
+line_spacing = 1.5
+first_line_indent_cm = 1.25
+
+# Кожен розділ з нової сторінки — зручно для друку робочої версії.
+[profiles.draft]
+description = "Робоча чернетка: кожен розділ з нової сторінки"
+output = "manuscript-draft.docx"
+sections = [
+    "00-titul-anotatsiya.md",
+    "01-vstup.md",
+    "02-ohlyad.md",
+    "03-meta-zadachi.md",
+    "04-materialy-metody.md",
+    "05-rezultaty.md",
+    "06-obgovorennya.md",
+    "07-vysnovky.md",
+    "08-literatura.md",
+    "09-vidomosti-pro-avtoriv.md",
+]
+page_break_before = [
+    "01-vstup.md",
+    "02-ohlyad.md",
+    "03-meta-zadachi.md",
+    "04-materialy-metody.md",
+    "05-rezultaty.md",
+    "06-obgovorennya.md",
+    "07-vysnovky.md",
+    "08-literatura.md",
+    "09-vidomosti-pro-avtoriv.md",
+]

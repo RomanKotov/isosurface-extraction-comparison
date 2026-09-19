@@ -1,0 +1,211 @@
+--- PAGE 6 ---
+3954 Engineering with Computers (2024) 40:3949–3977
+Fig. 4  Illustration of the piecewise NEFEM geometry mappings for a tetrahedral element with one face defined on three NURBS surfaces 
+(S1, S2, S3) , where S2 is a trimmed surface. Note that the tetrahedral element comprises three pieces
+Fig. 5  Illustration of the subdivision for the tetrahedral element Ωe in Fig. 4
+
+--- PAGE 7 ---
+3955Engineering with Computers (2024) 40:3949–3977 
+definitions of the geometric entities are introduced to to 
+facilitate the creation of a NEFEM volume element which 
+requires subdivision.
+In practice, the piecewise definition of a NEFEM 
+element face, as the bottom face shown in Fig.  4, is 
+described by a subdivision based on the surfaces. This 
+leads to a sub-mesh  with each constituent cell sticking 
+onto one of the involved surfaces. Note that the sub-mesh 
+terminology is limited to the surface mesh. Using the sub-
+mesh as the underlying faces, the tetrahedral element can 
+be further subdivided. Figure  5 illustrates the subdivision 
+of the example tetrahedral element Ωe in Fig.  4 into three 
+subdomains Ωe,i , where i = 1, 2, 3 denotes the i-th prism 
+in the corresponding parameter domain Πe,i . In general, a 
+subdivided element is expressed as
+where /u1D697/u1D69C/u1D68D/u1D698 is the number of physical subdomains according 
+to the embedded NURBS geometry. To maintain a consistent 
+meshing strategy with simplified data structure storing the 
+element information, each subdomain is further subdivided 
+into several subcells in tetrahedral shape. For instance, as 
+shown in Fig. 5, the subdomain Ωe,2 is further divided into 
+subcells Ω1
+e,2 and Ω2
+e,2 . This is facilitated by subdividing the 
+corresponding parameter domains, such as splitting Πe,2 into 
+Π1
+e,2 and Π2
+e,2 , as well as the parameter domains of the under-
+lying NURBS surface, such as dividing Λe,2 into Λ1
+e,2 and 
+Λ2
+e,2 . Eventually, the tetrahedral element Ωe is divided into 
+six subcells in total and all in tetrahedron shape.
+In this work, the geometric entities of NEFEM elements 
+are defined at the subcell level. This is consistent with the 
+NEFEM surface mesh, so that similar data structure can 
+be used. Due to the prismatic structure of the geometric 
+mapping (1 ), all edges of the subcell connecting the top 
+node x4 are straight lines.
+2.3.1  Geometric definition of subedges
+For a non-self-intersecting NURBS surface S , any of its 
+boundary or trimming curves C(/u1D706) can be projected back 
+to its parametric space to obtain the parametric curve or 
+p-curve c(/u1D706)∈ℝ2 , which is defined as
+The p-curve may be further mapped to the physical space by 
+the NURBS parametrisation S , therefore the NURBS curve 
+C(/u1D706)∈ℝ3 is also referred to as the physical p-curve.
+(2)Ωe =
+/u1D697/u1D69C/u1D68D/u1D698/uni22C3.s1
+i=1
+Ωe,i,
+(3)c(/u1D706)=S−1(C(/u1D706)).
+The edges of a subcell, firstly defined in the parametric 
+space, are also known as the parametric subedges. In par -
+ticular, considering the prismatic structure of the param-
+eter domain, viz. Πe =Λ e ×[ 0, 1] , only three scenarios are 
+considered for a parametric subedge: 
+1. The subedge is interior to the underlying parametric 
+space Λe,i , i.e. with at most one vertex on a p-curve;
+2. The subedge is on the boundary or trimming p-curve 
+of the parametric space, i.e. with both vertices on a 
+p-curve;
+3. The subedge is a ridge of the prism.
+The first type, parametric subedges with at most one vertex 
+on a p-curve are defined, using a cubic description, namely
+where /u1D740k =( /u1D706k, /u1D705k) for k = 1, … ,4  are the four points in 
+Λe,i that define the edge Γ/u1D706 , and Nk(/u1D709) are the four one-
+dimensional cubic Lagrange polynomials defined on the 
+reference interval [0, 1].
+The second type, a parametric subedge with both vertices 
+on a p-curve, is simply defined by trimming the parent 
+p-curve as
+where C(/u1D706)∶[0, 1] → Λe,i is the parametrisation of the 
+p-curve to which the edge Γ/u1D706 belongs, and [/u1D7061, /u1D7062] is the 
+trimming interval for the subedge.
+The last type, parametric subedges that are ridges of 
+the prism, are defined the same way as the first type, but 
+with the parametric space Λe,i replaced by the parameter 
+domain of the prism Πe,i , and thus the defining points 
+/u1D740k =( /u1D706k, /u1D705k, /u1D717k)∈Π e,i . It is noted the internal points, namely 
+/u1D7403 and /u1D7404 , are restricted to the straight line defined by /u1D7401 
+and /u1D7402.
+The parametric subedges are then mapped to the physical 
+space by the geometric mapping /u1D74D , to obtain the physical 
+subedges.
+2.3.2  Geometric definition of subfaces
+Similarly, the faces of a subcell are firstly defined in the 
+parametric space as the parametric subfaces, and then 
+mapped by /u1D74D to obtain the physical subfaces. There are two 
+types of parametric subfaces of interest: 
+(4)
+/u1D6BD∶[ 0, 1] ⟶ Γ/u1D706∈Λ e,i;
+/u1D709⟼ /u1D6BD(/u1D709) ∶=
+4/uni2211.s1
+k=1
+/u1D740kNk(/u1D709),
+(5)
+/u1D6BF∶[ 0, 1] ⟶ Γ𝜆 ⊂𝜕 Λe,i;
+𝜉 ⟼ /u1D6BF(𝜉) ∶= C((1 − 𝜉)𝜆1 + 𝜉𝜆2),
+
+--- PAGE 8 ---
+3956 Engineering with Computers (2024) 40:3949–3977
+1. The subface is part of the underlying parametric space 
+Λe,i for a boundary surface, namely Λj
+e,i ⊂ Λe,i;
+2. The subface is an extrusion face of the prismatic 
+parameter domain Πe,i , namely 𝜕Πj
+e,i ⊂𝜕 Πe,i.
+The first type, a parametric subface Λj
+e,i ⊂ Λe,i is defined 
+using the mapping
+where /u1D6BF1 is the parametrisation of the first subedge, 
+connecting nodes 1 and 2 of the subface, /u1D6BF2 is the 
+parametrisation of the second subedge, connecting nodes 
+2 and 3 of the subface and /u1D6BF3 is the parametrisation of the 
+third subedge, connecting nodes 1 and 3 of the subface. This 
+mapping can be seen as a particular case of the blending 
+function method [39]. The corresponding physical subfaces 
+are simply defined as /u1D715Ωj
+e,i = S(Λj
+e,i).
+The second type, a parametric subface 𝜕Πj
+e,i ⊂𝜕 Πe,i is 
+defined using the mapping
+where /u1D6BF(/u1D709)∈Λ e,i is the parametrisation of the underlying 
+subedge. Note that this type of parametric subface is in 
+quadrilateral shape, but the mapped physical subface is in 
+triangular shape.
+2.3.3  Geometric supporting points
+For NEFEM elements containing an edge or a face traversing 
+multiple curves or surfaces, the intersection of the edge and 
+a NURBS curve is inevitable. To account for the intersection 
+between the edge and a geometric curve, an enhanced edge 
+description is proposed in [37] by introducing geometric 
+supporting points  or GS-points. The set of GS-points 
+associated to one element Ωe is given by the intersections 
+of /u1D715Ωe with the physical p-curves plus the intersections 
+between physical p-curves that are inside Ωe . In this paper, 
+a convention is introduced that all vertex nodes are rendered 
+by black dots, while all GS-points are shown as green dots, 
+as illustrated in Fig. 4 and 5.
+It is worth emphasising that GS-points are introduced to 
+formally define the geometry of a NEFEM element and its 
+subcells. They do not induce any new degrees of freedom to 
+a solver that adopts the NEFEM meshes. Similarly, subcells 
+are only introduced due to the piecewise nature of a NEFEM 
+(6)
+/u1D6AF:[0, 1]2 ⟶ Λj
+e,i(/u1D709, /u1D702) ⟼ /u1D6AF(/u1D709, /u1D702)
+: =( 1 − /u1D702)/u1D6BF1(/u1D709)+/u1D709/u1D6BF2(/u1D702)
++( 1 − /u1D709)/u1D6BF3(/u1D702)−( 1 − /u1D709)
+(1 − /u1D702)x1 − /u1D709(1 − /u1D702)x2,
+(7)
+/u1D6BC∶[ 0, 1]2 ⟶ /u1D715Πj
+e,i
+(/u1D709, /u1D702) ⟼ /u1D6BC(/u1D709, /u1D702) ∶= ( /u1D6BF(/u1D709), /u1D702),
+surface element, but the only element that being used by 
+the solver is Ωe . Because of the geometry-defining feature 
+of the GS-points, they will be used for devising piecewise 
+quadratures for numerical integration over the faces 
+traversing multiple surfaces and the associated elements. 
+Further usage of the GS-points during the mesh generation 
+process will be discussed in Sect. 3 and 4.
+3  NEFEM surface mesh generation
+In this section, the generation of NEFEM triangular surface 
+mesh is briefly recalled. It is worth emphasising that it is 
+assumed that the upstream CAD geometry is watertight. 
+The NEFEM surface mesh is a prerequisite for generating 
+the volume mesh, as it provides the boundary discretisation 
+tailored for NEFEM solvers. The surface mesh is desired to 
+satisfy the following requirements: 
+1. The characteristic element size is dominated by the user-
+specified spacing, and it is not restricted by the size of 
+geometric features in the CAD model;
+2. The surface mesh must not introduce geometric 
+discretisation error as it encapsulates the NURBS 
+definition of the geometry;
+3. The surface elements should pass visibility checks to 
+enable the efficient creation of volume elements that 
+avoids self-intersections.
+The first two requirements have been addressed in previous 
+work [37]. Note that the geometry entities introduced in 
+Sect. 2.3 are compatible with the second requirement. The 
+last requirement is posed here to facilitate the volume mesh 
+generation, and it will be further detailed in Sect.  3.2.
+The NEFEM surface mesh generation starts from an 
+initial surface mesh obtained by a standard mesh generator 
+with a user-defined mesh size. Despite that this initial mesh 
+is likely to contain numerous elements violating the user-
+specified spacing, it is required to be watertight and free 
+of self-intersections. A remeshing is then performed on 
+the initial surface mesh, with a dedicated process to allow 
+creating elements traversing multiple surfaces around 
+geometric features, so that the element sizes become 
+compliant with the user specification.
+During the surface mesh generation, GS-points are 
+typically created using operations such as edge collapse, 
+edge split or edge flip. Besides, the GS-points can slide 
+along the parent intersection curve, so that the element could 
+achieve a better quality.
+Local mesh refinement can be performed by specifying a 
+spacing function, as done with traditional mesh generators. 
+

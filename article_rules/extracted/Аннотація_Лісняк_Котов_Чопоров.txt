@@ -1,0 +1,29 @@
+FlexiCubes-Based Polygonization of Geometric Models Defined by R-Functions
+
+Lisniak Andrii[0000-0001-9669-7858],
+
+Roman Kotov[0009-0008-5283-2972],
+
+Serhii Choporov [0000-0001-5932-952X]
+
+Abstract R-functions provide a powerful analytic framework for constructing complex geometric domains through continuous Boolean composition of implicit primitives. Despite their strong mathematical foundation and precise boundary control, generating high-quality polygonal approximations of R-function-defined objects remains challenging, particularly in the presence of sharp features and complex topology.
+
+In this paper, we investigate the application of the FlexiCubes isosurface extraction method to polygonize geometric objects defined via R-functions. Unlike classical Marching Cubes and Dual Contouring algorithms, FlexiCubes employs a flexible dual isosurface formulation with additional degrees of freedom for vertex positioning and element splitting control, enabling improved feature preservation and enhanced mesh quality.
+
+We perform a comparative evaluation on a set of analytically constructed models involving Boolean compositions and geometric singularities. The resulting meshes are assessed using geometric fidelity, topological correctness, and element quality metrics. Experimental results demonstrate a reduction in sliver triangles, improved sharp feature reconstruction, and increased mesh regularity compared to traditional spatial decomposition approaches.
+
+The proposed methodology establishes an effective bridge between analytic R-function-based modeling and modern high-quality isosurface extraction techniques.
+
+Keywords: R-functions, implicit surface modeling, isosurface extraction, FlexiCubes, high-quality mesh generation, polygonization, geometric modeling
+
+Lisniak Andrii
+
+Head of the Department of Software Engineering, Faculty of Mathematics, Zaporizhzhya National University, 66 Universytetska str., 69011 Zaporizhzhia, Ukraine, e-mail: a.lisnyak@znu.edu.ua
+
+Roman Kotov
+
+PhD student, Faculty of Mathematics, Zaporizhzhya National University, 66 Universytetska str., 69011 Zaporizhzhia, Ukraine, e-mail: rkotov.me@gmail.com
+
+Serhii Choporov
+
+Supervisory Board Member, Zaporizhzhya National University, 66 Universytetska str., 69011 Zaporizhzhia, Ukraine, e-mail: s.choporoff@znu.edu.ua

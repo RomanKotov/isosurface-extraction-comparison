@@ -1,0 +1,223 @@
+--- PAGE 7 ---
+Neural Dual Contouring • 104:7
+Table 2. Quantitative evaluation on ABC with SDF (signed or unsigned)
+inputs at two resolutions, evaluated on the test set split, using mesh quality
+metrics, output complexity, and inference times.
+643 CD↓ F1↑ NC↑ ECD↓ EF1↑ #V #T Inference
+SDF input ( ×105) ( ×102) time
+NMC 4.365 0.878 0.976 0.340 0.766 42,767 85,544 1.148s
+NMC-lite 4.356 0.878 0.975 0.338 0.767 21,933 43,877 1.135s
+DC-est 4.673 0.827 0.958 3.810 0.167 5,459 10,969 0.421s
+MC33 4.873 0.788 0.950 5.759 0.103 5,473 10,954 0.005s
+NMC* 4.400 0.874 0.972 0.409 0.715 42,767 85,544 0.158s
+NMC-lite* 4.386 0.875 0.973 0.416 0.725 21,933 43,877 0.153s
+NDC 4.463 0.867 0.970 0.338 0.745 5,459 10,969 0.027s
+UNDC 0.930 0.873 0.974 0.328 0.746 5,584 11,295 0.051s
+UNDC (UDF) 0.960 0.868 0.971 0.379 0.735 5,692 11,420 0.053s
+1283 CD↓ F1↑ NC↑ ECD↓ EF1↑ #V #T Inference
+SDF input ( ×105) ( ×102) time
+NMC 4.129 0.882 0.979 0.204 0.806 175,926 351,867 8.991s
+NMC-lite 4.117 0.882 0.979 0.231 0.808 88,419 176,853 8.984s
+DC-est 4.132 0.879 0.977 2.215 0.266 22,088 44,213 1.765s
+MC33 4.144 0.870 0.972 4.247 0.193 22,048 44,107 0.030s
+NMC* 4.116 0.882 0.978 0.257 0.779 175,926 351,867 1.126s
+NMC-lite* 4.114 0.882 0.979 0.283 0.785 88,419 176,853 1.112s
+NDC 4.131 0.881 0.978 0.214 0.802 22,088 44,213 0.207s
+UNDC 0.789 0.890 0.983 0.149 0.813 22,578 45,411 0.410s
+UNDC (UDF) 0.792 0.889 0.983 0.227 0.810 22,874 45,715 0.409s
+Table 3. Quantitative results on Thingi10K with SDF input.
+1283 CD↓ F1↑ ECD↓ EF1↑ #V #T % IN % SA
+SDF input ( ×105) ( ×102) > 5◦ < 10◦
+MC33 2.421 0.890 2.657 0.197 22,324 44,656 19.08 2.43
+NMC* 2.613 0.902 0.269 0.760 169,211 338,427 20.99 0.77
+NMC-lite* 2.651 0.902 0.254 0.772 89,260 178,527 17.04 1.74
+NDC 2.300 0.901 0.215 0.792 22,295 44,631 12.52 0.24
+UNDC 0.757 0.904 0.189 0.795 22,478 45,043 12.66 0.29
+UNDC (UDF) 0.748 0.903 0.222 0.785 22,784 45,395 13.19 0.28
+Table 4. Quantitative results on FAUST with SDF input.
+1283 CD↓ F1↑ ECD↓ EF1↑ #V #T % IN % SA
+SDF input ( ×105) ( ×102) > 5◦ < 10◦
+MC33 0.453 0.985 0.086 0.387 12,551 25,076 34.28 4.23
+NMC* 0.385 0.990 0.146 0.552 83,024 166,038 44.58 1.18
+NMC-lite* 0.381 0.991 0.119 0.567 50,207 100,404 38.33 2.63
+NDC 0.397 0.989 0.044 0.530 12,538 25,100 38.38 0.11
+UNDC 0.362 0.992 0.038 0.574 12,609 25,258 37.38 0.16
+UNDC (UDF) 0.365 0.991 0.045 0.549 12,682 25,293 38.72 0.21
+Triangle & vertex counts. We count the number of vertices (#V)
+and triangles (#T) in the output shape to reveal the fidelity-complexity
+trade-off. Note that while our method generates quad faces, we al-
+ways randomly split each quad into two triangles for evaluations
+and visualizations.
+Inference time. We report inference times (seconds per shape) for
+the methods tested on the ABC test set. Timings are collected on
+the same machine with one NVIDIA GTX 1080ti GPU.
+4.3 Reconstruction from SDF
+We first test NDC and UNDC on mesh reconstruction from grids of
+signed distances, and compare them to Marching Cubes 33 (MC33)
+(an improved version of MC to guarantee topological correctness in
+Fig. 8. Mesh reconstruction results from SDF grid inputs at a relatively low
+resolution of 643. The shapes in the first three columns are from ABC test
+set, and the last column from Thingi10K. Zoom in to see various surface
+artifacts and artifacts near edges on NMC-lite* and NMC* results, broken
+meshes from MC33 (red arrows), and non-manifold edges from NDC and
+UNDC (green arrows). Pay special attention to the thin sheets (blue arrows)
+reconstructed by the sign-agnostic UNDC, which correspond to parts of
+the ground truth shape that are thinner than one voxel. In contrast, none of
+the other methods (a-e) could even recover any of these thin parts.
+each cube [Chernyaev 1995; Lewiner et al. 2003]), classical DC with
+estimated normals (DC-est), and two versions of Neural Marching
+Cubes (NMC and NMC-lite) [Chen and Zhang 2021].
+DC-est takes the same SDF input as our method, obtains gradient
+values at grid points by local differentiation over the SDF, and runs
+the classical DC [Ju et al. 2002] as described in Figure 2 by estimating
+
+--- PAGE 8 ---
+104:8 • Zhiqin Chen, Andrea Tagliasacchi, Thomas Funkhouser, and Hao Zhang
+Fig. 9. Mesh reconstruction results from SDF grid inputs at 1283 resolution
+on the FAUST dataset; see insets to compare triangle quality.
+Fig. 10. Qualitative results of mesh reconstruction from UDF inputs at
+1283 resolution on two cloth shapes from the MGN dataset. Note the open
+surfaces reconstructed by our sign-agnostic method UNDC.
+Fig. 11. Some plots of surface quality (via % of Inaccurate Normals) and
+triangle quality (via % of Small Angles), onABC test set with 643 SDF input.
+NDC and UNDC consistently outperform other isosurfacing methods.
+the intersection points and their gradients via linear interpolation.
+Since NMC and NMC-lite use large networks to ensure the qual-
+ity of the output meshes, which makes the inference significantly
+slower, we replace the large backbone networks in them with our
+6-layer CNN to obtainNMC* and NMC-lite*, in order to have a fair
+comparison on reconstruction quality with respect to the inference
+time. In addition, we include the results of UNDC when the input
+is a grid of unsigned distances as UNDC (UDF). Since there is no
+method to reconstruct meshes from grids of unsigned distances to
+our knowledge, we do not compare it with other methods.
+We show visual results in Figure 8, with more results provided in
+the supplementary material. We report the quantitative results on
+the ABC test set in Table 2. To make the paper compact, we reduce
+the sizes of the tables by removing some less representative metrics.
+The full tables can be found in the supplementary material.
+Reconstruction accuracy. NDC and UNDC consistently outper-
+form model-driven MC33 and DC-est in terms of CD and F1. Clearly,
+normal estimation is not expected to be accurate, especially near
+sharp features. The results of DC-est are similar to or slightly better
+than those of MC33, as shown in Figure 8 and Table 2.
+Although the network size has been significantly reduced in
+NMC* and NMC-lite*, they usually have slightly better results than
+NDC, since, given the same input resolution, Marching Cubes meth-
+ods are able to reconstruct more inner structures inside each cube
+with their abundant tessellation templates, while NDC cannot due
+to its simple tessellation design. However, NMC and NMC-lite are
+significantly worse than UNDC in CD, even with their original large
+networks, due to the fact that UNDC can reconstruct thin structures
+which NMC methods and NDC cannot. Visual results in Figure 8
+show some examples. Note in the first and the third columns (blue
+arrows), some thin structures are not reconstructed by any methods
+other than UNDC. In the fourth column and in Figure 9 , we show
+that even on smooth shapes, NDC and UNDC can preserve more
+details, such as the crevices, compared to MC33. However, in the
+second column (green arrows), we show failure cases from NDC
+and UNDC, where the walls of the tube are merged together with
+non-manifold edges, as a result of their simpler tessellations in each
+cube – this problem does not occur in NMC*.
+Sharp features. As shown in Tables 2, 3, and 4, NDC and UNDC
+consistently outperform MC33, DC-est, NMC*, and NMC-lite*, in
+ECD and EF1, for feature preservation. The only exception is the EF1
+in Table 4, which may be due to NDC’s tessellation being too simple
+to handle the fine structures of human shapes, e.g., the fingers.
+Normal quality. Since the compared methods generally have simi-
+lar point-wise reconstruction accuracies, the quality of the generated
+surfaces in terms of visual appearance can be a better differentiator.
+We consistently observe that after switching to smaller networks,
+NMC* and NMC-lite* tend to generate noisy surfaces even over flat
+regions, as shown in Figure 8 (c-d). We use %IN (IN = inaccurate nor-
+mals) as a means to quantify the quality of surface normals, which
+correlate with surface quality. Figure 11 shows the %IN-threshold
+curves on the ABC test set, where the normal errors of NDC and
+UNDC are noticeably less than those from other methods for small
+threshold values, which is consistent with our visual observation
+that NMC* and NMC-lite* outputs exhibit more surface artifacts.
+Triangle quality. In Figure 11, we show %SA-threshold (SA = small
+angles) curves for various methods on the ABC test set, showing
+that NDC outperforms the others in triangle quality, with UNDC
+coming close. A visual comparison can be found in Figure 9.
+Triangle and vertex count. The #V and #T in Table 2 show that the
+vertex and triangle numbers of NDC and UNDC are very similar
+to those of MC33. NMC and NMC-lite produce more vertices and
+triangles due to their complex cube tessellation templates.
+
+--- PAGE 9 ---
+Neural Dual Contouring • 104:9
+Inference time. With no deep networks involved, MC33 is un-
+doubtedly the fastest, as shown by the inference times in Table 2.
+With our light network design, NDC and UNDC are next in line
+in terms of speed. Since NDC does not need sign predictions, it is
+half the size of and twice as fast as UNDC, running in real time
+on an NVIDIA GTX 1080ti GPU. With the newer RTX 3090 being
+twice as fast as GTX 1080ti, we expect UNDC to also run in real
+time on a higher-end GPU. In comparison, the original NMC and
+NMC-lite require more than a second to test on an input grid of
+643. Even after we replace their networks with our light designs,
+NMC* and NMC-lite* are still 2-4 times slower than UNDC and NDC,
+due to their more complex cube tessellations. Finally, the inference
+time for classical DC is far from optimal as we employed our own
+implementation of DC-est with an unoptimized QEF solver.
+Robustness to translation and rotation. We highly encourage the
+readers to watch the video in the supplementary material where we
+test the methods on a shape while moving and rotating the shape
+inside the sampling grid. It clearly shows that NDC and UNDC are
+the most robust compared to others.
+Varying input grid resolutions. We report quantitative results ob-
+tained by the various methods on 643 and 1283 input resolutions
+in Table 2. When increasing the input resolution, the gap of recon-
+struction accuracy diminishes, as reflected by CD and F1. But NMC*
+and NMC-lite* will always produce significantly more vertices and
+triangles, and take more time to process a shape.
+Generalizability. To show the generalizability of our method, we
+show the quantitative results on Thingi10K and FAUST in Table 3
+and 4, respectively. Visual results can be found in Figure 8 and 9.
+All data-driven methods are only trained on the ABC training set.
+These results are consistent with our analysis above. Specifically, in
+terms of surface quality, we show %IN (pred) with error greater than
+5◦ in Table 3 to show that NMC* and NMC-lite* have more surface
+artifacts. However, on organic shapes from FAUST, MC33 outper-
+forms deep learning methods, as shown by %IN (pred) in Table 4. It
+makes sense, because Marching Cubes was originally designed to
+reconstruct smooth shapes, and none of the deep learning methods
+are trained on smooth shapes. We also report %SA with angles less
+than 10◦ in Table 3 and Table 4 for Thingi10K and FAUST, to show
+that our method produces fewer small-angle triangles.
+4.4 Reconstruction from UDF
+As shown in the last rows of Table 2, 3, and 4, the results on UDF
+are similar to those on SDF, but are usually worse due to the lack of
+signs. Still, UNDC is able to recover the shapes reasonably well by
+just observing the changes of unsigned distances in nearby cells. The
+visual results on UDF are very similar to the results on SDF when
+tested on the three datasets in the previous experiment. Therefore,
+we show the results of reconstructing clothes with open surfaces
+in MGN dataset [Bhatnagar et al . 2019] from grids of unsigned
+distances in Figure 10. Note that in our experiments with UDF, we
+do not compare with prior works, since, to the best of our knowledge,
+UNDC is the only method that can reconstruct meshes from UDF.
+Table 5. Quantitative results on ABC test set with binary voxel input.
+643 CD↓ F1↑ NC↑ ECD↓ EF1↑ #V #T Inference
+Voxel input ( ×105) ( ×102) time
+MC33 26.862 0.085 0.921 11.342 0.018 5,826 11,656 0.005s
+NMC* 9.452 0.422 0.927 0.698 0.346 42,045 84,089 0.156s
+NMC-lite* 9.428 0.420 0.927 0.604 0.356 21,431 42,862 0.154s
+NDC 9.387 0.428 0.930 0.567 0.360 5,345 10,726 0.055s
+UNDC 9.139 0.428 0.931 0.564 0.359 5,365 10,772 0.055s
+Fig. 12. Mesh reconstruction results from binary voxel (occupancy) in-
+puts at 643 resolution. Zoom in to see some surface artifacts by NMC-lite*
+and NMC*, marked with blue arrows. The shapes in the first column are
+from ABC test set, and the last three columns from Thingi10K.
+4.5 Reconstruction from binary voxels
+Reconstructing meshes from binary voxels is clearly more challeng-
+ing than from SDF grids. Learning from data is absolutely necessary
+in this scenario if one wishes to produce plausible outputs, as re-
+flected in Table 5, where MC33 is significantly worse than all others
+in all metrics, except for vertex and triangle count. The results on
+Thingi10K and FAUST, and on1283 inputs are in the supplementary
+material. They show the same pattern as Table 5 and demonstrate
+the generalizability of our method. We show visual results in Fig-
+ure 12, with more provided in the supplementary material. Many
+

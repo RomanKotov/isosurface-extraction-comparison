@@ -1,0 +1,361 @@
+--- PAGE 9 ---
+Flexible Isosurface Extraction for Gradient-Based Mesh Optimization • 1:9
+𝑀𝐶𝑆𝐷𝐹 𝐷𝐶ℎ𝑒𝑟𝑚𝑖𝑡𝑒 𝑁𝐷𝐶𝑆𝐷𝐹 MC DMTet FlexiCubes Reference
+Surface extractions from GT SDF Differentiable iso-surfacing
+Fig. 13. Visual comparison of a set of iso-surfacing techniques. The three leftmost examples: Marching Cubes ( 𝑀𝐶𝑆𝐷𝐹 ), Dual Contouring, Neural Dual
+Contouring, use surface extraction from the ground truth SDF. The next three examples: Marching Cubes, Deep Marching Tetrahedra, and FlexiCubes, use
+differentiable iso-surfacing. The grid resolution is 643 for all methods except DMTet, which uses 803 tetrahedral grid to match the triangle count in output
+meshes.
+values. Please refer to the Supplement for details of the objective
+functions and their weighting factors.
+Dataset. We use the dataset collected by Myles et al. [2014], which
+contains 3D shapes from the AIM@Shape database and popular as-
+sets from other community repositories. This shape collection has
+a great diversity in geometric features and topology complexities,
+ranging from noisy scanned surfaces to highly-detailed CAD models.
+Following Chen and Zhang [2021], we remove the non-watertight
+and very skinny (e.g. wires) shapes, which are not suitable for isosur-
+facing methods to reconstruct. In total, we use 79 different shapes
+in our evaluation.
+Baselines. As shown in Figure 13, we compare FlexiCubes with
+different methods split into two categories. FlexiCubes is grouped
+with the differentiable isosurfacing algorithms, MC and DMTet,
+which provides the most direct comparisons. We reconstruct meshes
+through optimization with objective functions mentioned above.
+Note that the resolution of tetrahedral grid used by DMTet is not
+directly comparable with voxel grids used by our method, as the
+number of vertices are different under the same resolution. Thus,
+we additionally report DMTet at different resolution to match the
+triangle counts. The resolution of DMTet is specified in the brackets.
+In the other category we group the non-differentiable isosur-
+facing methods. To ensure a fair comparison, we use the ground
+truth SDF field and extract the mesh using vanilla MC ( 𝑀𝐶𝑆𝐷𝐹 ),
+DC (𝐷𝐶ℎ𝑒𝑟𝑚𝑖𝑡𝑒 ) and NDC (𝑁𝐷𝐶𝑆𝐷𝐹 ). For DC we complement the
+ground truth SDF with normal vectors computed using finite dif-
+ferences, and for NDC, we use a pretrained model provided by the
+authors1.
+Evaluation Metrics. We evaluate the reconstructed meshes in
+terms of reconstruction accuracy and intrinsic quality of the recon-
+structed mesh. For the former, we follow NDC [Chen et al. 2022b]
+and compute Chamfer Distance (CD), F-Score (F1), Edge Chamfer
+Distance (EDC), Edge F-score (EF1), and the percentage of Inaccu-
+rate Normals (IN> 5◦) w.r.t to the ground truth mesh. For the latter,
+we compute triangle aspect ratios, radius ratios, and min and max
+angles. A detailed description of the evaluation metrics is provided
+in the Supplement.
+1https://github.com/czq142857/NDC
+ACM Trans. Graph., Vol. 42, No. 4, Article 1. Publication date: August 2023.
+
+--- PAGE 10 ---
+1:10 • Shen et al.
+Table 2. Quantitative results on Mesh Reconstruction. We report the follow-
+ing metrics: IN> 5◦: normal angle difference > 5◦, CD: Chamfer Distance,
+F1: F1 score, ECD: Edge Chamfer Distance, EF1: Edge F1 Score. #V: number
+of vertices, #F: number of faces.
+323 IN>5◦(%)↓ CD(10−5)↓ F1↑ ECD(10−2)↓ EF1↑ #V #T
+𝑀𝐶𝑆𝐷𝐹 85.60 22.65 0.28 5.56 0.08 2387 4771
+𝐷𝐶ℎ𝑒𝑟𝑚𝑖𝑡𝑒 74.43 17.15 0.38 4.82 0.11 2360 4775
+𝑁𝐷𝐶𝑆𝐷𝐹 72.60 17.61 0.42 3.55 0.13 1877 3801
+MC 66.61 9.11 0.54 2.60 0.13 2573 5146
+DMTet(32) 66.22 11.56 0.52 3.64 0.17 1691 3387
+DMTet(40) 61.21 8.35 0.58 3.64 0.20 2626 5259
+FlexiCubes 50.52 7.01 0.64 2.11 0.26 2400 4800
+643 IN>5◦(%)↓ CD(10−5)↓ F1↑ ECD(10−2)↓ EF1↑ #V #T
+𝑀𝐶𝑆𝐷𝐹 80.67 6.84 0.55 2.55 0.14 9881 19783
+𝐷𝐶ℎ𝑒𝑟𝑚𝑖𝑡𝑒 63.34 5.90 0.61 3.80 0.23 9828 19769
+𝑁𝐷𝐶𝑆𝐷𝐹 55.22 6.16 0.57 1.22 0.26 9828 19769
+MC 52.37 6.33 0.66 1.25 0.25 10459 20801
+DMTet(64) 50.20 7.50 0.66 3.77 0.28 6783 13566
+DMTet(80) 48.66 5.17 0.66 3.59 0.29 10385 20784
+FlexiCubes 34.87 4.87 0.70 0.71 0.43 9916 19843
+1283 IN>5◦(%)↓ CD(10−5)↓ F1↑ ECD(10−2)↓ EF1↑ #V #T
+𝑀𝐶𝑆𝐷𝐹 77.23 4.72 0.68 1.13 0.33 40164 80374
+𝐷𝐶ℎ𝑒𝑟𝑚𝑖𝑡𝑒 53.98 4.59 0.69 3.82 0.40 40128 80360
+𝑁𝐷𝐶𝑆𝐷𝐹 43.20 5.04 0.65 0.79 0.43 40129 80361
+MC 42.56 4.51 0.72 1.32 0.44 38645 77212
+DMTet(128) 48.86 4.98 0.74 1.50 0.39 23535 47001
+FlexiCubes 30.57 4.31 0.71 0.42 0.51 38923 77845
+Uniform 323 Adaptive 643 Adaptive 1283 GT
+2.1k tris, CD:4.3 4.5k tris, CD:2.5 7.6k tris, CD: 2.4 10k tris
+Uniform 323 Adaptive 643 Adaptive 1283 GT
+2.1k tris, CD:5.7 5.7k tris, CD:4.7 22k tris, CD: 4.4 104k tris
+Fig. 14. Adaptive meshing with FlexiCubes optimizing mesh topology and
+the octree structure jointly. CD denotes Chamfer distance (10−5).
+.
+Table 3. Quantitative results on shape reconstruction ablating different
+formulations of the dual vertex.
+643 IN>5◦(%)↓ CD(10−5)↓ F1↑ ECD(10−2)↓ EF1↑ #V #T
+𝐷𝑀𝐶𝑐𝑒𝑛𝑡𝑟𝑜𝑖𝑑 [Nielson 2004] 53.02 5.85 0.65 2.60 0.19 10240 20488
++ flex vertex (Section 4.2) 40.88 5.34 0.68 0.99 0.37 10022 20055
++ grid deform (Section 4.4) 39.46 5.01 0.69 0.98 0.41 9879 19766
++ flex quad split (Section 4.3) 34.87 4.87 0.70 0.71 0.43 9916 19843
+Results. The quantitative results of reconstruction quality are pro-
+vided in Table 2 with qualitative examples depicted in Figure 13.
+Figure 15 shows the quantitative results of intrinsic mesh quality.
+Table 4. Quantitative results on mesh reconstruction with equilateral trian-
+gle regularizer. Adding regularizer for DMTet and MC significantly impacts
+geometric metrics (IN>5◦(%), CD), while FlexiCubes only sacrifices a bit.
+643 IN>5◦(%)↓ CD(10−5)↓ Aspect Ratio > 4 (%)↓ Radius Ratio > 4 (%)↓ Min Angle < 10 (%)↓
+MC 52.37 6.33 11.71 11.71 11.84
+DMTet(80) 48.66 5.17 17.31 16.68 17.83
+FlexiCubes 34.87 4.87 2.93 4.49 2.04
+MC + Reg. 50.16 8.56 11.46 11.43 11.62
+DMTet(80) + Reg. 67.65 6.69 0.29 0.46 0.26
+FlexiCubes + Reg. 41.05 5.46 0.39 0.69 0.24
+Methods that extract the mesh as a post-processing step fail to
+achieve competitive performance in terms of reconstruction quality,
+highlighting the importance of end-to-end optimization that miti-
+gates the discretization errors introduced in post-processing. When
+compared with other methods that use differentiable iso-surfacing
+for mesh reconstruction (MC and DMTet), FlexiCubes extracts
+meshes that align significantly better with ground truth geometry,
+while maintaining superior mesh quality which is on par with the
+best performing NDC method.
+We further ablate each component we introduced in FlexiCubes,
+and provide quantitative results in Table 3 with qualitative examples
+in Figure 9. In the Supplement we also include reconstructions of
+the same object under different rotations.
+5.2 Mesh Optimization with Regularizations
+Our FlexiCubes representation is flexible enough that objectives
+and regularizers which depend on the extracted mesh itself can be
+directly evaluated with automatic differentiation and incorporated
+into gradient-based optimization. Some surface-based regularizers
+such as surface area may be easily expressed directly as functions
+of the underlying scalar field, while others, especially those which
+depend on the mesh discretization itself, have no direct equivalent.
+This same simple strategy does not succeed with more rigid repre-
+sentations like Marching Cubes, because the extracted mesh does
+not have the degrees of freedom to adapt to arbitrary objectives. We
+provide two examples of mesh regularizations below.
+Equilateral Edge Length. In many applications, such as physics
+simulation, generating equilateral triangles is preferable over thin
+triangles. We penalize the variance of the edge lengths on the ex-
+tracted mesh in this regularization. In particular, we compute the
+average edge length ¯𝑒 = 1
+|E|
+˝
+𝑒∈E|𝑒|2, whereE denotes the set of
+all the edges in the extracted mesh. The regularization is computed
+as:𝑅edge = 1
+|𝑇|
+˝
+𝑒∈𝑡,𝑡∈𝑇(|𝑒− ¯𝑒|2), where𝑇 is the set of extracted
+triangles. We combine this regularization with the reconstruction
+loss mentioned in Section 5.1. We first run the optimization to recon-
+struct an input mesh without the regularization term for 1000 steps,
+then we further run 300 steps using both the reconstruction loss and
+the regularization loss, with the regularization weight progressively
+increasing from 0 to 100. Adding equilateral triangle regularization
+allows FlexiCubes to generate more uniform triangles with a slight
+degradation in the reconstruction quality. We compare FlexiCubes
+with MC and DMTet, and provide qualitative results in Figure 16.
+The quantitative comparison in Table 4 shows that both our method
+and DMTet can gain a significant improvement in triangle quality
+after adding the regularization, as measured by percentages of tri-
+angles having Aspect Ratio > 4, Radius Ratio > 4, or Min Angle < 10.
+ACM Trans. Graph., Vol. 42, No. 4, Article 1. Publication date: August 2023.
+
+--- PAGE 11 ---
+Flexible Isosurface Extraction for Gradient-Based Mesh Optimization • 1:11
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+Aspect Ratio
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+Radius Ratio
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+1 2 3 4
+0.00
+0.07
+0.14
+0.21
+0.28
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+Min Angle
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+0 20 40 60
+0.00
+0.04
+0.08
+0.12
+0.16
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+Max Angle
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+60 80 100 120 140 160 180
+0.00
+0.06
+0.12
+0.18
+0.24
+MCSDF DC NDC MC DMTet FlexiCubes
+Fig. 15. Quantitative comparison of the intrinsic quality of extracted meshes. FlexiCubes extracts high-quality meshes with a significantly smaller amount of
+sliver triangles (row 3) and more equilateral sides (row 1). The smooth distributions of Min and Max Angle (rows 3 and 4) show that FlexiCubes can adjust the
+triangles to better fit the geometry in slightly non-planar regions.
+Fig. 16. Adding equilateral edge regularization to enhance triangle quality.
+Comparing with results in Figure 13, which does not have equilateral edge
+regularization loss, FlexiCubes only has slight degradation of the recon-
+struction quality, while MC and DMTet lose details in the local geometry.
+Please zoom in to see the mesh details.
+However, our method has a significantly smaller drop in geometric
+quality, as measured by the first two metrics in Table 4, thanks to
+the flexibility of our surface extraction formulation.
+Developability. As a more complex mesh-based term, we consider
+the developability energy of Stein et al. [2018, Equation 4], which
+amounts to penalizing the smallest eigenvalue of the covariance
+matrix of face normals about each vertex. Developability is a geo-
+metric measure penalizes stretching of the surface relative to a flat
+sheet, but does not penalize bending in a single direction; it has
+applications to manufacturing from sheets of material like sheet
+metal or plywood. Although developability could in-principle be
+quantified directly on an implicit function, it has a significant rela-
+tionship to discrete mesh connectivity, as discussed by Stein et al.
+[2018]. Figure 17 shows the result of incorporating this term into a
+synthetic reconstruction problem. Attempting to do the same with
+Marching Cubes is much less successful, failing to preserve shape
+features and achieve the desired style.
+FlexiCubes
+ +0.05
+-0.05
+Marching
+Cubes
+Fig. 17. To demonstrate mesh-based regularizers, we combine synthetic
+photogrammetry with a developability term [Stein et al. 2018], which en-
+courages fabricability from panels. FlexiCubes has the freedom to fit the
+shape and satisfy the regularizer, whereas Marching Cubes does not. Top:
+Gaussian curvature in radians,Bottom: stylized render to show panelization.
+6 APPLICATIONS
+6.1 Photogrammetry Through Differentiable Rendering
+The differentiable isosurfacing technique DMTet [2021] is at the core
+of the recent work, nvdiffrec, which jointly optimizes shape, ma-
+terials, and lighting from images [Hasselgren et al. 2022; Munkberg
+et al. 2022]. By simply replacing DMTet with FlexiCubes in the
+topology optimization step, leaving the remainder of the pipeline un-
+modified, we observe improved geometry reconstructions at equal
+triangle count, which is illustrated in Figure 20. We also report
+nvdiffrec result with DMTet vs. FlexiCubes on the NeRF syn-
+thetic dataset [Mildenhall et al. 2020]. View interpolation scores and
+Chamfer distances are shown in Table 5. We show additional results
+on datasets of real-world photographs in Figure 19. In general,Flex-
+iCubes produces fewer sliver triangles as can be observed in the
+visual examples (Figure 18) and the min angle histogram. Addition-
+ally, the nicer triangulation of FlexiCubes leads to easier creation
+ACM Trans. Graph., Vol. 42, No. 4, Article 1. Publication date: August 2023.
+

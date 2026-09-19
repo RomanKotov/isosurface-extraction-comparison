@@ -27,3 +27,8 @@ build-backend = "poetry.core.masonry.api"
 dev = [
     "jupyterlab (>=4.5.7,<5.0.0)"
 ]
+article = [
+    "python-docx (>=1.2.0,<2.0.0)",
+    "latex2mathml (>=3.81.1,<4.0.0)",
+    "lxml (>=6.1.3,<7.0.0)"
+]
