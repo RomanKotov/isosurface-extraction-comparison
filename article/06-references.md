@@ -43,7 +43,7 @@
 | 4 | Shen et al., 2023. Flexible isosurface extraction (FlexiCubes) | алгоритм FlexiCubes, подвійна тріангуляція, чутливість до ваг втрат, система метрик якості | Introduction, Materials & Methods, Results, Discussion | ✓ (`2023_Shen...pdf`) |
 | 5 | Brunton, Abu Rmaileh, 2021. Displaced signed distance fields | неявне подання геометрії для адитивного виробництва | Introduction | ✓ (`2021_Brunton...pdf`) |
 | 6 | Slotnick et al., 2014. CFD Vision 2030 Study | генерування сіток як базовий напрям досліджень NASA Vision 2030 | Introduction | NASA Technical Report |
-| 7 | Zou et al., 2024. Tetrahedral meshes for NURBS-enhanced FEM | вимоги МКЕ до сітки; трудомісткість підготовки CAD-геометрії | Introduction, Materials & Methods, Discussion | ✓ (`2024_Zou...pdf`) |
+| 7 | Zou et al., 2024. Tetrahedral meshes for NURBS-enhanced FEM | вимоги МСЕ до сітки; трудомісткість підготовки CAD-геометрії | Introduction, Materials & Methods, Discussion | ✓ (`2024_Zou...pdf`) |
 | 8 | Gasparini et al., 2013. Engineering analysis in imprecise geometric models | дефекти B-Rep блокують застосування засобів інженерного аналізу | Introduction, Materials & Methods, Discussion | ✓ (`2013_Gasparini...pdf`) |
 | 9 | Sukumar, Srivastava, 2022. Exact imposition of boundary conditions | застосування функцій відстані та R-функцій у PINN; нормалізація $m$-го порядку | Introduction, Materials & Methods, Discussion | ✓ (`2022_Sukumar...pdf`) |
 | 10 | Рвачев, 1982. Теория R-функций и некоторые ее приложения | фундаментальна монографія з теорії R-функцій, систем $R_0, R_\alpha, R_p$ | Introduction, Materials & Methods, Discussion | Профільна монографія |
@@ -58,7 +58,7 @@
 | 19 | Ju et al., 2002. Dual contouring of Hermite data | алгоритм Dual Contouring, мінімізація QEF для збереження гострих ліній | Introduction, Materials & Methods, Discussion | ✓ (`2002_Ju...pdf`) |
 | 20 | Schaefer, Warren, 2004. Dual Marching Cubes | алгоритм DMC на базі центроїдів первинного розбиття MC | Introduction, Materials & Methods, Discussion | ✓ (`2004_Schaefer...pdf`) |
 | 21 | Ohtake et al., 2003. Dynamic mesh optimization | оптимізація та згладжування сіток неявних поверхонь з гострими ребрами | Introduction, Materials & Methods | ✓ (`2003_Ohtake...pdf`) |
-| 22 | Chakkour, 2024. Finite element modelling of complex 3D image data | межа за мітками матеріалів; контроль форми елементів та кута для МКЕ | Introduction, Materials & Methods, Discussion | ✓ (`2024_Chakkour...pdf`) |
+| 22 | Chakkour, 2024. Finite element modelling of complex 3D image data | межа за мітками матеріалів; контроль форми елементів та кута для МСЕ | Introduction, Materials & Methods, Discussion | ✓ (`2024_Chakkour...pdf`) |
 | 23 | Chen, Zhang, 2021. Neural Marching Cubes | навчання ізоповерхневої екстракції нейронними мережами | Introduction | ✓ (`2021_Chen...pdf`) |
 | 24 | Chen et al., 2022. Neural Dual Contouring | передбачення позицій подвійних вершин, збереження гострих ребер | Introduction, Materials & Methods, Discussion | ✓ (`2022_Chen...pdf`) |
 | 25 | Lei et al., 2023. Intelligent mesh generation: a survey | огляд методів інтелектуальної генерації сіток | Introduction | ✓ (`2023_Lei...pdf`) |
